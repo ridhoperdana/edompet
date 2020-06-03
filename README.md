@@ -1,16 +1,19 @@
-# project_template
+# eDompet
 
-A new Flutter project.
+## Purpose
 
-## Getting Started
+This application is created to learns:
+- How to design UI App with Sketch <https://www.sketch.com/>
+- How to create prototype with Framer <https://framer.com/>
+- How to write implementation with Flutter (will also trying Supernova <https://supernova.io/> to genereate the code)
 
-This project is a starting point for a Flutter application.
+## About eDompet
 
-A few resources to get you started if this is your first Flutter project:
+eDompet is an App which can be your personal electronic wallet on your smartphone.
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+### Features
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+- Multiple wallets supported
+- No internet needed
+- Exportable transactions (csv,JSON)
+- Simple design
