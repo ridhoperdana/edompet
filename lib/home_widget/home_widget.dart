@@ -6,15 +6,33 @@
 *  Copyright © 2018 Anadrep. All rights reserved.
     */
 
+import 'package:edompet/add_expenses_widget/add_expenses_widget.dart';
+import 'package:edompet/add_income_widget/add_income_widget.dart';
+import 'package:edompet/all_savings_widget/all_savings_widget.dart';
+import 'package:edompet/home_widget/cell_item_widget.dart';
 import 'package:edompet/values/values.dart';
+import 'package:edompet/wallets_widget/wallets_widget.dart';
 import 'package:flutter/material.dart';
 
-
 class HomeWidget extends StatelessWidget {
-  
+  void onExportPressed(BuildContext context) {}
+
+  void onLoadMoreButtonPressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => AllSavingsWidget()));
+
+  void onExpenseIconPressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => AddExpensesWidget()));
+
+  void onHomeIconPressed(BuildContext context) {}
+
+  void onSavingIconPressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => AddIncomeWidget()));
+
+  void onWalletIconPressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => WalletsWidget()));
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
@@ -24,540 +42,589 @@ class HomeWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: 317,
-                height: 43,
-                margin: EdgeInsets.only(top: 17),
-                child: Row(
-                  children: [
-                    Text(
-                      "Dashboard",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: AppColors.primaryText,
-                        fontFamily: "Helvetica",
-                        fontWeight: FontWeight.w700,
-                        fontSize: 36,
+            Container(
+              height: 44,
+              margin: EdgeInsets.only(left: 29, top: 35, right: 29),
+              child: Row(
+                children: [
+                  Text(
+                    "Dashboard",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 51, 51, 51),
+                      fontFamily: "Helvetica",
+                      fontWeight: FontWeight.w700,
+                      fontSize: 36,
+                    ),
+                  ),
+                  Spacer(),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    child: FlatButton(
+                      onPressed: () => this.onExportPressed(context),
+                      color: Color.fromARGB(0, 0, 0, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(0)),
+                      ),
+                      textColor: Color.fromARGB(255, 0, 0, 0),
+                      padding: EdgeInsets.all(0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/export.png",
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Spacer(),
-                    Container(
-                      width: 20,
-                      height: 20,
-                      child: Image.asset(
-                        "assets/images/export.png",
-                        fit: BoxFit.none,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Align(
-              alignment: Alignment.topLeft,
+            Expanded(
+              flex: 1,
               child: Container(
-                width: 278,
-                height: 125,
-                margin: EdgeInsets.only(left: 33, top: 39),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                margin:
+                    EdgeInsets.only(left: 14, top: 23, right: 13, bottom: 13),
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      right: 0,
                       child: Container(
-                        width: 228,
-                        height: 60,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Positioned(
-                              left: 0,
-                              top: 22,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text(
-                                    "Your current money..",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: AppColors.primaryText,
-                                      fontFamily: "Helvetica",
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 23,
+                        height: 627,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.all(0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  width: 278,
+                                  height: 126,
+                                  margin: EdgeInsets.only(left: 20, top: 24),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                          width: 228,
+                                          height: 60,
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              Positioned(
+                                                left: 0,
+                                                top: 22,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .stretch,
+                                                  children: [
+                                                    Text(
+                                                      "Your current money..",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 52, 52, 52),
+                                                        fontFamily: "Helvetica",
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 23,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topLeft,
+                                                      child: Container(
+                                                        width: 63,
+                                                        height: 4,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              64,
+                                                              152,
+                                                              100),
+                                                        ),
+                                                        child: Container(),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 0,
+                                                top: 0,
+                                                child: Text(
+                                                  "Uang bulanan",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 51, 51, 51),
+                                                    fontFamily: "Helvetica",
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Container(
+                                        height: 60,
+                                        margin: EdgeInsets.only(bottom: 1),
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              top: -5,
+                                              right: 0,
+                                              child: Text(
+                                                "10.500.000",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 51, 51, 51),
+                                                  fontFamily: "Helvetica",
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 50,
+                                                  height: 1.2,
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 0,
+                                              top: 21,
+                                              child: Text(
+                                                "Rp.",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 51, 51, 51),
+                                                  fontFamily: "Helvetica",
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 19,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 15, top: 11),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: EdgeInsets.all(0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 324,
+                                          height: 446,
+                                          decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Color.fromARGB(
+                                                    141, 0, 0, 0),
+                                                offset: Offset(2, 2),
+                                                blurRadius: 2,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: 306,
+                                                height: 446,
+                                                decoration: BoxDecoration(
+                                                  color: Color.fromARGB(
+                                                      255, 249, 249, 249),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(12)),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      width: 228,
+                                                      height: 38,
+                                                      margin: EdgeInsets.only(
+                                                          left: 17, top: 20),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .stretch,
+                                                        children: [
+                                                          Container(
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    right: 13),
+                                                            child: Text(
+                                                              "Last 3 Transactions",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        52,
+                                                                        52,
+                                                                        52),
+                                                                fontFamily:
+                                                                    "Helvetica",
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 23,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Spacer(),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .topLeft,
+                                                            child: Container(
+                                                              width: 63,
+                                                              height: 4,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        64,
+                                                                        152,
+                                                                        100),
+                                                              ),
+                                                              child:
+                                                                  Container(),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 267,
+                                                      height: 300,
+                                                      margin: EdgeInsets.only(
+                                                          left: 17, top: 20),
+                                                      child: ListView.builder(
+                                                        itemCount: 15,
+                                                        itemBuilder: (context,
+                                                                index) =>
+                                                            CellItemWidget(),
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        width: 261,
+                                                        height: 33,
+                                                        margin: EdgeInsets.only(
+                                                            bottom: 20),
+                                                        child: FlatButton(
+                                                          onPressed: () => this
+                                                              .onLoadMoreButtonPressed(
+                                                                  context),
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              228,
+                                                              228,
+                                                              228),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius: Radii
+                                                                .k8pxRadius,
+                                                          ),
+                                                          textColor:
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  51,
+                                                                  51,
+                                                                  51),
+                                                          padding:
+                                                              EdgeInsets.all(0),
+                                                          child: Text(
+                                                            "Load More",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      51,
+                                                                      51,
+                                                                      51),
+                                                              fontFamily:
+                                                                  "Helvetica",
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Spacer(),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Container(
-                                      width: 63,
-                                      height: 4,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 64, 152, 100),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        height: 75,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromARGB(113, 0, 0, 0),
+                              offset: Offset(2, 2),
+                              blurRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              height: 75,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 248, 248, 249),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    offset: Offset(2, 2),
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Container(
+                                    width: 33,
+                                    height: 51,
+                                    child: FlatButton(
+                                      onPressed: () =>
+                                          this.onHomeIconPressed(context),
+                                      color: Color.fromARGB(0, 0, 0, 0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(0)),
                                       ),
-                                      child: Container(),
+                                      textColor:
+                                          Color.fromARGB(255, 51, 51, 51),
+                                      padding: EdgeInsets.all(0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/browser.png",
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            "Home",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 51, 51, 51),
+                                              fontFamily: "Helvetica",
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 50,
+                                    height: 51,
+                                    child: FlatButton(
+                                      onPressed: () =>
+                                          this.onExpenseIconPressed(context),
+                                      color: Color.fromARGB(0, 0, 0, 0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(0)),
+                                      ),
+                                      textColor:
+                                          Color.fromARGB(255, 51, 51, 51),
+                                      padding: EdgeInsets.all(0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/bill-2.png",
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            "Expense",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 51, 51, 51),
+                                              fontFamily: "Helvetica",
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 37,
+                                    height: 53,
+                                    child: FlatButton(
+                                      onPressed: () =>
+                                          this.onSavingIconPressed(context),
+                                      color: Color.fromARGB(0, 0, 0, 0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(0)),
+                                      ),
+                                      textColor:
+                                          Color.fromARGB(255, 51, 51, 51),
+                                      padding: EdgeInsets.all(0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/coin.png",
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            "Saving",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 51, 51, 51),
+                                              fontFamily: "Helvetica",
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 33,
+                                    height: 51,
+                                    child: FlatButton(
+                                      onPressed: () =>
+                                          this.onWalletIconPressed(context),
+                                      color: Color.fromARGB(0, 0, 0, 0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(0)),
+                                      ),
+                                      textColor:
+                                          Color.fromARGB(255, 51, 51, 51),
+                                      padding: EdgeInsets.all(0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/money.png",
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            "Wallet",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 51, 51, 51),
+                                              fontFamily: "Helvetica",
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Positioned(
-                              left: 0,
-                              top: 0,
-                              child: Text(
-                                "Uang bulanan",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: AppColors.primaryText,
-                                  fontFamily: "Helvetica",
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Spacer(),
-                    Container(
-                      height: 60,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: -5,
-                            right: 0,
-                            child: Text(
-                              "10.500.000",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: AppColors.primaryText,
-                                fontFamily: "Helvetica",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 50,
-                                height: 1.2,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            top: 21,
-                            child: Text(
-                              "Rp.",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: AppColors.primaryText,
-                                fontFamily: "Helvetica",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 19,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                width: 306,
-                height: 446,
-                margin: EdgeInsets.only(left: 19, top: 36),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryBackground,
-                  boxShadow: [
-                    Shadows.primaryShadow,
-                  ],
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 228,
-                      height: 38,
-                      margin: EdgeInsets.only(left: 17, top: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(right: 13),
-                            child: Text(
-                              "Last 3 Transactions",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: AppColors.primaryText,
-                                fontFamily: "Helvetica",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 23,
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Container(
-                              width: 63,
-                              height: 4,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 64, 152, 100),
-                              ),
-                              child: Container(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 266,
-                      height: 87,
-                      margin: EdgeInsets.only(left: 17, top: 20),
-                      decoration: BoxDecoration(
-                        color: AppColors.ternaryBackground,
-                        borderRadius: Radii.k8pxRadius,
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            left: 16,
-                            top: 8,
-                            right: 79,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(
-                                  "Tagihan kartu kredit",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: AppColors.secondaryText,
-                                    fontFamily: "Helvetica",
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 1, top: 13),
-                                    child: Text(
-                                      "360.000",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: AppColors.secondaryText,
-                                        fontFamily: "Helvetica",
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 29,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            left: 17,
-                            top: 29,
-                            child: Text(
-                              "4 April 2020",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: AppColors.secondaryText,
-                                fontFamily: "Helvetica",
-                                fontWeight: FontWeight.w300,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 266,
-                      height: 87,
-                      margin: EdgeInsets.only(left: 17, top: 20),
-                      decoration: BoxDecoration(
-                        color: AppColors.ternaryBackground,
-                        borderRadius: Radii.k8pxRadius,
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            left: 16,
-                            top: 8,
-                            right: 143,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(
-                                  "bayar netflix",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: AppColors.secondaryText,
-                                    fontFamily: "Helvetica",
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 1, top: 13),
-                                    child: Text(
-                                      "169.000",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: AppColors.secondaryText,
-                                        fontFamily: "Helvetica",
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 29,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            left: 17,
-                            top: 29,
-                            child: Text(
-                              "6 April 2020",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: AppColors.secondaryText,
-                                fontFamily: "Helvetica",
-                                fontWeight: FontWeight.w300,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Spacer(),
-                    Container(
-                      width: 266,
-                      height: 87,
-                      margin: EdgeInsets.only(left: 17, bottom: 14),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 65, 152, 100),
-                        borderRadius: Radii.k8pxRadius,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(left: 16, top: 8, right: 134),
-                            child: Text(
-                              "gaji freelance",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: AppColors.secondaryText,
-                                fontFamily: "Helvetica",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 50,
-                            margin: EdgeInsets.only(left: 17, right: 119),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  top: 15,
-                                  right: 0,
-                                  child: Text(
-                                    "7.500.000",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: AppColors.secondaryText,
-                                      fontFamily: "Helvetica",
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 29,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  right: 38,
-                                  child: Text(
-                                    "4 April 2020",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: AppColors.secondaryText,
-                                      fontFamily: "Helvetica",
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        width: 261,
-                        height: 33,
-                        margin: EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 228, 228, 228),
-                          boxShadow: [
-                            Shadows.secondaryShadow,
-                          ],
-                          borderRadius: Radii.k8pxRadius,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 94),
-                              child: Text(
-                                "Load More",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: AppColors.primaryText,
-                                  fontFamily: "Helvetica",
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ),
-            Spacer(),
-            Container(
-              height: 75,
-              margin: EdgeInsets.only(left: 13, right: 14, bottom: 13),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 255, 255),
-                borderRadius: Radii.k8pxRadius,
-              ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned(
-                    left: 37,
-                    right: 45,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            width: 41,
-                            height: 46,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Container(
-                                  height: 30,
-                                  margin: EdgeInsets.symmetric(horizontal: 7),
-                                  child: Image.asset(
-                                    "assets/images/bill.png",
-                                    fit: BoxFit.none,
-                                  ),
-                                ),
-                                Spacer(),
-                                Container(
-                                  margin: EdgeInsets.only(right: 2),
-                                  child: Text(
-                                    "Expense",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: AppColors.primaryText,
-                                      fontFamily: "Helvetica",
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            width: 28,
-                            height: 46,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Container(
-                                  height: 28,
-                                  child: Image.asset(
-                                    "assets/images/money.png",
-                                    fit: BoxFit.none,
-                                  ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  "Wallet",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: AppColors.primaryText,
-                                    fontFamily: "Helvetica",
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          height: 34,
-                          child: Image.asset(
-                            "assets/images/coin.png",
-                            fit: BoxFit.none,
-                          ),
-                        ),
-                        Spacer(),
-                        Container(
-                          margin: EdgeInsets.only(left: 1, right: 2),
-                          child: Text(
-                            "Saving",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: AppColors.primaryText,
-                              fontFamily: "Helvetica",
-                              fontWeight: FontWeight.w400,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ),
           ],
