@@ -134,7 +134,7 @@ class ListViewHomeState extends State<ListViewHome> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.fromLTRB(17, 20, 23, 0),
+                          padding: EdgeInsets.fromLTRB(17, 20, 0, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -167,7 +167,7 @@ class ListViewHomeState extends State<ListViewHome> {
                                 child: Container(
                                   alignment: Alignment.center,
                                   child: Text('Load More'),
-                                  width: 194,
+                                  width: 219,
                                   height: 31,
                                 ),
                                 shape: RoundedRectangleBorder(
@@ -293,7 +293,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       Container(
-        height: 700,
+        height: 500,
         child: ListViewHome(),
         width: 1000,
       ),
