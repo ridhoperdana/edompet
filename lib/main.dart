@@ -53,46 +53,51 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'eDompet',
-      home: Scaffold(
-        body: _children[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          onTap: onTabTapped,
-          currentIndex: _currentIndex, // new
-          items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'asset/images/home.svg',
-                color: Colors.grey[700],
-                height: 25,
+      home: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Scaffold(
+          body: _children[_currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            onTap: onTabTapped,
+            currentIndex: _currentIndex, // new
+            items: [
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  'asset/images/home.svg',
+                  color: Colors.grey[700],
+                  height: 25,
+                ),
+                title: Text('Home'),
               ),
-              title: Text('Home'),
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'asset/images/expense.svg',
-                color: Colors.grey[700],
-                height: 25,
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  'asset/images/expense.svg',
+                  color: Colors.grey[700],
+                  height: 25,
+                ),
+                title: Text('Expense'),
               ),
-              title: Text('Expense'),
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'asset/images/income.svg',
-                color: Colors.grey[700],
-                height: 25,
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  'asset/images/income.svg',
+                  color: Colors.grey[700],
+                  height: 25,
+                ),
+                title: Text('Income'),
               ),
-              title: Text('Income'),
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'asset/images/wallet.svg',
-                color: Colors.grey[700],
-                height: 25,
-              ),
-              title: Text('Wallets'),
-            )
-          ],
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  'asset/images/wallet.svg',
+                  color: Colors.grey[700],
+                  height: 25,
+                ),
+                title: Text('Wallets'),
+              )
+            ],
+          ),
         ),
       ),
     );
