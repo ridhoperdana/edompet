@@ -9,8 +9,7 @@ class Dashboard extends StatefulWidget {
   }
 }
 
-class _DashboardState extends State<Dashboard>
-    with SingleTickerProviderStateMixin {
+class _DashboardState extends State<Dashboard> {
   final Widget bodySection = Column(
     children: <Widget>[
       Row(children: <Widget>[
@@ -100,24 +99,9 @@ class _DashboardState extends State<Dashboard>
     ],
   );
 
-  Animation<Offset> animation;
-  AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller =
-        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
-    animation = Tween<Offset>(begin: Offset(-1, 0.0), end: Offset.zero)
-        .animate(controller);
-    controller.forward();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-        child: Scaffold(body: SingleChildScrollView(child: bodySection)),
-        position: animation);
+    return SingleChildScrollView(child: bodySection);
   }
 }
 
@@ -241,6 +225,7 @@ class ListViewHomeState extends State<ListViewHome> {
       itemBuilder: (context, index) {
         return Container(
           alignment: Alignment.topLeft,
+          color: Colors.amber,
           child: Column(
             children: <Widget>[
               Container(

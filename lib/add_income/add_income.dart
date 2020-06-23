@@ -92,6 +92,7 @@ class AddIncomeState extends State<AddIncome>
               height: 121,
               margin: EdgeInsets.fromLTRB(0, 0, 0, 27),
               child: Card(
+                elevation: 5,
                 color: Color.fromRGBO(64, 152, 100, 1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
