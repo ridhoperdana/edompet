@@ -21,7 +21,7 @@ class AddWalletState extends State<AddWallet>
     return SlideTransition(
       position: animation,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
+        padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
         child: Column(
           children: <Widget>[
             Container(
@@ -36,12 +36,13 @@ class AddWalletState extends State<AddWallet>
               padding: const EdgeInsets.fromLTRB(20.0, 0, 1.0, 39),
               alignment: Alignment.topLeft,
             ),
-            Container(
+            Expanded(
+                child: Container(
               child: ListViewTransactions(),
               width: 400,
-              height: 585,
+              height: 580,
               padding: EdgeInsets.all(0),
-            )
+            )),
           ],
         ),
       ),

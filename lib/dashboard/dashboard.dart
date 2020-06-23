@@ -225,7 +225,6 @@ class ListViewHomeState extends State<ListViewHome> {
       itemBuilder: (context, index) {
         return Container(
           alignment: Alignment.topLeft,
-          color: Colors.amber,
           child: Column(
             children: <Widget>[
               Container(
