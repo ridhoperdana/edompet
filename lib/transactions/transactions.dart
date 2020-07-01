@@ -67,7 +67,6 @@ class TransactionsState extends State<Transactions>
                 child: ListViewTransactions(),
                 width: 400,
                 height: 580,
-                // padding: EdgeInsets.all(0),
               )),
             ],
           ),
@@ -94,52 +93,124 @@ class Transactions extends StatefulWidget {
 class ListViewTransactionsState extends State<ListViewTransactions> {
   @override
   Widget build(BuildContext context) {
-    final walletsData = [
-      {"name": "Uang Bulanan", "value": 360000, "color": "#409864"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
+    final transactionsData = [
+      {
+        "title": "Tagihan kartu kredit",
+        "date": "4 April 2020",
+        "value": 360000,
+      },
+      {
+        "title": "Tagihan netflix",
+        "date": "3 April 2020",
+        "value": 169000,
+      },
+      {
+        "title": "Jual usb type c hub",
+        "date": "1 April 2020",
+        "value": 150000,
+      },
+      {
+        "title": "Tagihan kartu kredit",
+        "date": "4 April 2020",
+        "value": 360000,
+      },
+      {
+        "title": "Tagihan netflix",
+        "date": "3 April 2020",
+        "value": 169000,
+      },
+      {
+        "title": "Jual usb type c hub",
+        "date": "1 April 2020",
+        "value": 150000,
+      },
+      {
+        "title": "Tagihan kartu kredit",
+        "date": "4 April 2020",
+        "value": 360000,
+      },
+      {
+        "title": "Tagihan netflix",
+        "date": "3 April 2020",
+        "value": 169000,
+      },
+      {
+        "title": "Jual usb type c hub",
+        "date": "1 April 2020",
+        "value": 150000,
+      },
+      {
+        "title": "Tagihan kartu kredit",
+        "date": "4 April 2020",
+        "value": 360000,
+      },
+      {
+        "title": "Tagihan netflix",
+        "date": "3 April 2020",
+        "value": 169000,
+      },
+      {
+        "title": "Jual usb type c hub",
+        "date": "1 April 2020",
+        "value": 150000,
+      }
     ];
 
     return ListView.builder(
-      itemCount: walletsData.length,
+      itemCount: transactionsData.length,
       scrollDirection: Axis.vertical,
-      padding: EdgeInsets.fromLTRB(21, 0, 20, 0),
+      padding: EdgeInsets.fromLTRB(21, 0, 21, 0),
       itemBuilder: (context, index) {
         return Container(
-          child: Card(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
-            elevation: 5,
-            color: HexColor(walletsData[index]["color"]),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16.3, 26, 16.3, 26),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(walletsData[index]["name"],
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      )),
-                  Text(walletsData[index]["value"].toString(),
-                      style: TextStyle(
-                        fontSize: 29,
-                        color: Colors.white,
-                      )),
-                ],
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  transactionsData[index]["title"],
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: const Color(0xFF000000),
+                  ),
+                ),
               ),
-            ),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                child: Text(
+                  transactionsData[index]["date"],
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: const Color(0xFF000000),
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                child: Text(
+                  transactionsData[index]["value"].toString(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: const Color(0xFF000000),
+                  ),
+                ),
+              ),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: Container(
+                  height: 2,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Color.fromRGBO(227, 227, 227, 1),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },

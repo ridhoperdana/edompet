@@ -1,4 +1,3 @@
-import 'package:edompet/models/transaction.dart';
 import 'package:edompet/transactions/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
