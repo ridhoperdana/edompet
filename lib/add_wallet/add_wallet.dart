@@ -100,6 +100,7 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
       itemBuilder: (context, index) {
         return Container(
           child: Card(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
             elevation: 5,
             color: HexColor(walletsData[index]["color"]),
             shape: RoundedRectangleBorder(
