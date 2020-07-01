@@ -1,3 +1,5 @@
+import 'package:edompet/models/transaction.dart';
+import 'package:edompet/transactions/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'add_wallet/add_wallet.dart';
@@ -53,6 +55,15 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'eDompet',
+      initialRoute: '/',
+      onGenerateRoute: (RouteSettings settings) {
+        var routes = <String, WidgetBuilder>{
+          '/transactions': (context) => Transactions(settings.arguments),
+          '/': (context) => Dashboard(),
+        };
+        WidgetBuilder builder = routes[settings.name];
+        return MaterialPageRoute(builder: (ctx) => builder(ctx));
+      },
       home: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());

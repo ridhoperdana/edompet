@@ -210,12 +210,17 @@ class ListViewTransactions extends StatefulWidget {
 }
 
 class ListViewHomeState extends State<ListViewHome> {
+  void _allTransactions(String transactionType) {
+    Navigator.of(context)
+        .pushNamed("/transactions", arguments: transactionType);
+  }
+
   @override
   Widget build(BuildContext context) {
     final transactionsData = [
-      {"title": "Last 3 Transactions"},
-      {"title": "Last 3 Expenses"},
-      {"title": "Last 3 Incomes"}
+      {"title": "Last 3 Transactions", "type": "all"},
+      {"title": "Last 3 Expenses", "type": "expense"},
+      {"title": "Last 3 Incomes", "type": "income"}
     ];
 
     return ListView.builder(
@@ -265,11 +270,17 @@ class ListViewHomeState extends State<ListViewHome> {
                                 height: 324,
                               ),
                               Card(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text('Load More'),
-                                  width: 219,
-                                  height: 31,
+                                child: InkWell(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text('Load More'),
+                                    width: 219,
+                                    height: 31,
+                                  ),
+                                  onTap: () {
+                                    _allTransactions(
+                                        transactionsData[index]["type"]);
+                                  },
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
