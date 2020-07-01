@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/animation.dart';
+import 'package:edompet/utils.dart';
 
 class TransactionsState extends State<Transactions>
     with SingleTickerProviderStateMixin {
+  Animation<Offset> animation;
+  AnimationController controller;
   String headerTitle = '';
 
   @override
   void initState() {
     super.initState();
+    controller =
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    animation = Tween<Offset>(begin: Offset(1, 0.0), end: Offset.zero)
+        .animate(controller);
+    controller.forward();
     if (widget.transactionType == 'expense') {
       this.headerTitle = 'All Expenses';
     } else if (widget.transactionType == 'income') {
@@ -18,49 +27,58 @@ class TransactionsState extends State<Transactions>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-        child: Column(
-          children: <Widget>[
-            Container(
-                padding: const EdgeInsets.fromLTRB(10.0, 0, 1.0, 30),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.grey,
-                        size: 24,
+    return SlideTransition(
+      position: animation,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                  padding: const EdgeInsets.fromLTRB(10.0, 0, 1.0, 30),
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.grey,
+                          size: 24,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    Container(
-                      child: Text(
-                        headerTitle,
-                        style: TextStyle(
-                            fontSize: 28.0,
-                            color: const Color(0xFF000000),
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "Roboto"),
+                      Container(
+                        child: Text(
+                          headerTitle,
+                          style: TextStyle(
+                              fontSize: 28.0,
+                              color: const Color(0xFF000000),
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Roboto"),
+                        ),
+                        alignment: Alignment.topLeft,
                       ),
-                      alignment: Alignment.topLeft,
-                    ),
-                  ],
-                )),
-            Expanded(
-                child: Container(
-              child: ListViewTransactions(),
-              width: 400,
-              height: 580,
-            )),
-          ],
+                    ],
+                  )),
+              Expanded(
+                  child: Container(
+                child: ListViewTransactions(),
+                width: 400,
+                height: 580,
+              )),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
 

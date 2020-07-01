@@ -5,7 +5,6 @@ import 'add_wallet/add_wallet.dart';
 import 'add_income/add_income.dart';
 import 'add_expense/add_expense.dart';
 import 'dashboard/dashboard.dart';
-import 'package:edompet/utils.dart';
 
 void main() => runApp(App());
 
@@ -62,7 +61,7 @@ class _AppState extends State<App> {
           '/': (context) => Dashboard(),
         };
         WidgetBuilder builder = routes[settings.name];
-        return ScaleRoute(builder);
+        return MaterialPageRoute(builder: (ctx) => builder(ctx));
       },
       home: GestureDetector(
         onTap: () {
