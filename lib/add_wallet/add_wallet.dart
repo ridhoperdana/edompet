@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:edompet/models/wallet.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class AddWalletState extends State<AddWallet> {
   int id = 2;
@@ -8,6 +9,9 @@ class AddWalletState extends State<AddWallet> {
 
   // final _formKey = GlobalKey();
   Wallet wallet = Wallet('', 0, '');
+  Color currentColor = Color.fromRGBO(64, 152, 100, 1);
+
+  void changeColor(Color color) => setState(() => currentColor = color);
 
   @override
   void initState() {
@@ -42,7 +46,7 @@ class AddWalletState extends State<AddWallet> {
               margin: EdgeInsets.fromLTRB(0, 0, 0, 27),
               child: Card(
                 elevation: 5,
-                color: Color.fromRGBO(64, 152, 100, 1),
+                color: this.currentColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -80,6 +84,7 @@ class AddWalletState extends State<AddWallet> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(21, 0, 21, 27),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       TextFormField(
                         style: TextStyle(
@@ -113,6 +118,52 @@ class AddWalletState extends State<AddWallet> {
                           wallet.initialMoney = int.parse(val);
                         }),
                       ),
+                      Padding(
+                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                'Color',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('Select a color'),
+                                          content: SingleChildScrollView(
+                                            child: BlockPicker(
+                                              pickerColor: currentColor,
+                                              onColorChanged: changeColor,
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                },
+                                child: Container(
+                                  child: Card(
+                                    color: this.currentColor,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.all(10),
+                                      width: 90,
+                                      child: Text(
+                                        'Choose',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                      ),
+                                    ),
+                                    elevation: 5,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ))
                     ],
                   ),
                 ),
@@ -143,19 +194,36 @@ class AddWalletState extends State<AddWallet> {
                       ),
                     ),
                   ),
-                  Container(
-                    child: Card(
-                      color: Color.fromRGBO(64, 152, 100, 1),
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(10),
-                        width: 90,
-                        child: Text(
-                          'Save',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Select a color'),
+                              content: SingleChildScrollView(
+                                child: BlockPicker(
+                                  pickerColor: currentColor,
+                                  onColorChanged: changeColor,
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    child: Container(
+                      child: Card(
+                        color: Color.fromRGBO(64, 152, 100, 1),
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(10),
+                          width: 90,
+                          child: Text(
+                            'Save',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
                         ),
+                        elevation: 5,
                       ),
-                      elevation: 5,
                     ),
                   ),
                 ],
