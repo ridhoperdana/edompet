@@ -14,7 +14,7 @@ class AddIncomeState extends State<AddIncome>
 
   AddIncomeState(this.origin);
 
-  final _formKey = GlobalKey();
+  // final _formKey = GlobalKey();
   final _transaction = Transaction('income');
   TextEditingController dateCtl = TextEditingController();
   String dateTimeText = '';

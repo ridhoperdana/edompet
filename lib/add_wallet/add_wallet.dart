@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
-import 'package:edompet/utils.dart';
+import 'package:edompet/models/wallet.dart';
 
-class AddWalletState extends State<AddWallet>
-    with SingleTickerProviderStateMixin {
-  Animation<Offset> animation;
-  AnimationController controller;
+class AddWalletState extends State<AddWallet> {
+  int id = 2;
+
+  AddWalletState();
+
+  // final _formKey = GlobalKey();
+  Wallet wallet = Wallet('', 0, '');
 
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
-    animation = Tween<Offset>(begin: Offset(1, 0.0), end: Offset.zero)
-        .animate(controller);
-    controller.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: animation,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-        child: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
+        child: Center(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
               child: Text(
-                "Manage Wallets",
+                "Add Wallet",
                 style: TextStyle(
                     fontSize: 28.0,
                     color: const Color(0xFF000000),
@@ -37,90 +36,139 @@ class AddWalletState extends State<AddWallet>
               padding: const EdgeInsets.fromLTRB(20.0, 0, 1.0, 39),
               alignment: Alignment.topLeft,
             ),
-            Expanded(
-                child: Container(
-              child: ListViewTransactions(),
-              width: 400,
-              height: 580,
-              padding: EdgeInsets.all(0),
-            )),
+            Container(
+              width: 334,
+              height: 121,
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 27),
+              child: Card(
+                elevation: 5,
+                color: Color.fromRGBO(64, 152, 100, 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16.3, 8.5, 16.3, 8.1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(wallet.name,
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Text(wallet.initialMoney.toString(),
+                          style: TextStyle(
+                            fontSize: 33,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 334,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 5,
+                color: Color.fromRGBO(248, 248, 248, 1),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(21, 0, 21, 27),
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(labelText: "Wallet's Name"),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter wallet name.';
+                          }
+                          return '';
+                        },
+                        onChanged: (val) => setState(() {
+                          wallet.name = val;
+                        }),
+                      ),
+                      TextFormField(
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(labelText: 'Money Spent'),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter initial money value';
+                          }
+                          return '';
+                        },
+                        onChanged: (val) => setState(() {
+                          wallet.initialMoney = int.parse(val);
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 10, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      child: Card(
+                        color: Colors.grey,
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(10),
+                          width: 90,
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
+                        elevation: 5,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Card(
+                      color: Color.fromRGBO(64, 152, 100, 1),
+                      child: Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(10),
+                        width: 90,
+                        child: Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                      elevation: 5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
-        ),
+        )),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 }
 
 class AddWallet extends StatefulWidget {
-  AddWallet({Key key}) : super(key: key);
-
   @override
   AddWalletState createState() => AddWalletState();
-}
-
-class ListViewTransactionsState extends State<ListViewTransactions> {
-  @override
-  Widget build(BuildContext context) {
-    final walletsData = [
-      {"name": "Uang Bulanan", "value": 360000, "color": "#409864"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-    ];
-
-    return ListView.builder(
-      itemCount: walletsData.length,
-      scrollDirection: Axis.vertical,
-      padding: EdgeInsets.fromLTRB(21, 0, 20, 0),
-      itemBuilder: (context, index) {
-        return Container(
-          child: Card(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
-            elevation: 5,
-            color: HexColor(walletsData[index]["color"]),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16.3, 26, 16.3, 26),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(walletsData[index]["name"],
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      )),
-                  Text(walletsData[index]["value"].toString(),
-                      style: TextStyle(
-                        fontSize: 29,
-                        color: Colors.white,
-                      )),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ListViewTransactions extends StatefulWidget {
-  @override
-  ListViewTransactionsState createState() => ListViewTransactionsState();
 }

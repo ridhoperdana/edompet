@@ -1,10 +1,12 @@
 import 'package:edompet/transactions/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'add_wallet/add_wallet.dart';
+import 'manage_wallets/manage_wallets.dart';
 import 'add_income/add_income.dart';
 import 'add_expense/add_expense.dart';
+import 'add_wallet/add_wallet.dart';
 import 'dashboard/dashboard.dart';
+import 'utils.dart';
 
 void main() => runApp(App());
 
@@ -35,7 +37,7 @@ class _AppState extends State<App> {
       Dashboard(),
       AddExpense(_currentIndex),
       AddIncome(_currentIndex),
-      AddWallet()
+      ManageWallet(),
     ];
   }
 
@@ -46,7 +48,7 @@ class _AppState extends State<App> {
       Dashboard(),
       AddExpense(_prevState),
       AddIncome(_prevState),
-      AddWallet()
+      ManageWallet(),
     ];
   }
 
@@ -58,9 +60,14 @@ class _AppState extends State<App> {
       onGenerateRoute: (RouteSettings settings) {
         var routes = <String, WidgetBuilder>{
           '/transactions': (context) => Transactions(settings.arguments),
+          '/new-wallet': (context) => AddWallet(),
           '/': (context) => Dashboard(),
         };
         WidgetBuilder builder = routes[settings.name];
+        if (settings.name == '/new-wallet') {
+          return ScaleRoute(builder);
+        }
+
         return MaterialPageRoute(builder: (ctx) => builder(ctx));
       },
       home: GestureDetector(
@@ -88,7 +95,7 @@ class _AppState extends State<App> {
                   color: Colors.grey[700],
                   height: 25,
                 ),
-                title: Text('Expense'),
+                title: Text('Add Expense'),
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
@@ -96,7 +103,7 @@ class _AppState extends State<App> {
                   color: Colors.grey[700],
                   height: 25,
                 ),
-                title: Text('Income'),
+                title: Text('Add Income'),
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(

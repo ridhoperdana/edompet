@@ -12,7 +12,7 @@ class AddExpenseState extends State<AddExpense>
   final int origin;
   int id = 1;
 
-  final _formKey = GlobalKey();
+  // final _formKey = GlobalKey();
   final _transaction = Transaction('expense');
   TextEditingController dateCtl = TextEditingController();
   String dateTimeText = '';
