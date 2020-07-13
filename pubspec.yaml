@@ -22,6 +22,8 @@ dependencies:
   flutter_datetime_picker: ^1.3.8
   intl: ^0.16.1
   flutter_colorpicker: ^0.3.4
+  sqflite: any
+  path_provider: any
   flutter:
     sdk: flutter
 

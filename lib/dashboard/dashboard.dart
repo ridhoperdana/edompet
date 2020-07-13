@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/rendering.dart';
+import 'package:edompet/models/transaction.dart';
+import 'package:edompet/repository/db.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -106,98 +109,125 @@ class _DashboardState extends State<Dashboard> {
 }
 
 class ListViewTransactionsState extends State<ListViewTransactions> {
+  Operation dbHelper = Operation();
+  Future<List<Transaction>> futureTranscation;
+
+  void updateListView() {
+    setState(() {
+      futureTranscation = dbHelper.fetchTransactions();
+    });
+  }
+
+  void initState() {
+    super.initState();
+    initializeDateFormatting();
+    updateListView();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final transactionsData = [
-      {
-        "title": "Tagihan kartu kredit",
-        "date": "4 April 2020",
-        "value": 360000,
-        "type": "expense"
-      },
-      {
-        "title": "Tagihan netflix",
-        "date": "3 April 2020",
-        "value": 169000,
-        "type": "expense"
-      },
-      {
-        "title": "Jual usb type c hub",
-        "date": "1 April 2020",
-        "value": 150000,
-        "type": "income"
-      }
-    ];
+    // final transactionsData = [
+    //   {
+    //     "title": "Tagihan kartu kredit",
+    //     "date": "4 April 2020",
+    //     "value": 360000,
+    //     "type": "expense"
+    //   },
+    //   {
+    //     "title": "Tagihan netflix",
+    //     "date": "3 April 2020",
+    //     "value": 169000,
+    //     "type": "expense"
+    //   },
+    //   {
+    //     "title": "Jual usb type c hub",
+    //     "date": "1 April 2020",
+    //     "value": 150000,
+    //     "type": "income"
+    //   }
+    // ];
 
-    return ListView.builder(
-      padding: EdgeInsets.fromLTRB(0, 20, 23, 0),
-      itemCount: transactionsData.length,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        switch (transactionsData[index]["type"]) {
-          case "expense":
-            return Card(
-              color: Color.fromRGBO(255, 111, 111, 1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(16.3, 8.5, 16.3, 8.1),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(transactionsData[index]["title"],
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        )),
-                    Text(transactionsData[index]["date"],
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white,
-                        )),
-                    Text(transactionsData[index]["value"].toString(),
-                        style: TextStyle(
-                          fontSize: 29,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
-              ),
-            );
-            break;
-          case "income":
-            return Card(
-              color: Color.fromRGBO(64, 152, 100, 1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(16.3, 8.5, 16.3, 8.1),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(transactionsData[index]["title"],
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        )),
-                    Text(transactionsData[index]["date"],
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white,
-                        )),
-                    Text(transactionsData[index]["value"].toString(),
-                        style: TextStyle(
-                          fontSize: 29,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
-              ),
-            );
-          default:
-            return ErrorWidget('this is error');
+    return FutureBuilder<List<Transaction>>(
+      future: futureTranscation,
+      builder: (context, snap) {
+        if (snap.hasData) {
+          List<Transaction> transactionsData = snap.data.toList();
+          return ListView.builder(
+            padding: EdgeInsets.fromLTRB(0, 20, 23, 0),
+            itemCount: transactionsData.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              print(transactionsData[index].type);
+              switch (transactionsData[index].type) {
+                case "expense":
+                  return Card(
+                    color: Color.fromRGBO(255, 111, 111, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(16.3, 8.5, 16.3, 8.1),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(transactionsData[index].shortDescription,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              )),
+                          Text(transactionsData[index].getStringCreatedTime,
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.white,
+                              )),
+                          Text(transactionsData[index].moneySpent.toString(),
+                              style: TextStyle(
+                                fontSize: 29,
+                                color: Colors.white,
+                              )),
+                        ],
+                      ),
+                    ),
+                  );
+                  break;
+                case "income":
+                  print('hereee');
+                  return Card(
+                    color: Color.fromRGBO(64, 152, 100, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(16.3, 8.5, 16.3, 8.1),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(transactionsData[index].shortDescription,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              )),
+                          Text(transactionsData[index].dateTime.toString(),
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.white,
+                              )),
+                          Text(transactionsData[index].moneySpent.toString(),
+                              style: TextStyle(
+                                fontSize: 29,
+                                color: Colors.white,
+                              )),
+                        ],
+                      ),
+                    ),
+                  );
+                default:
+                  return ErrorWidget('this is error');
+              }
+            },
+          );
+        } else {
+          return Container();
         }
       },
     );
