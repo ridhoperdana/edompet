@@ -195,7 +195,33 @@ class AddExpenseState extends State<AddExpense>
                         ),
                       ),
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 20, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        InkWell(
+                          child: Container(
+                            child: Card(
+                              color: Color.fromRGBO(255, 111, 111, 1),
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(10),
+                                width: 90,
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                              elevation: 5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               )),
             )),
