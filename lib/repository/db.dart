@@ -6,13 +6,14 @@ import 'package:edompet/models/transaction.dart' as trans;
 class SqlLite {
   Future<Database> initDb() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path + 'edompet.db';
+    String path = directory.path + '/edompet.db';
     var todoDatabase = openDatabase(path, version: 1, onCreate: _createDb);
     return todoDatabase;
   }
 
   void _createDb(Database db, int version) async {
-    await db.execute('''
+    try {
+      await db.execute('''
       CREATE TABLE wallet (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
@@ -29,6 +30,9 @@ class SqlLite {
         created_time TEXT
       );
     ''');
+    } catch (e) {
+      print('Error create db : $e');
+    }
   }
 }
 
@@ -79,15 +83,40 @@ class Operation {
   //   return result;
   // }
 
-  Future<List<trans.Transaction>> fetchTransactions() async {
+  Future<List<trans.Transaction>> fetchTransactions(
+      String transactionType) async {
     Database db = await dbHelper.initDb();
-    final sql = '''SELECT * FROM ${Operation.transactionTable}''';
+    var sql = '';
+    switch (transactionType) {
+      case 'all':
+        sql = '''SELECT * FROM ${Operation.transactionTable}''';
+        break;
+      default:
+        sql =
+            '''SELECT * FROM ${Operation.transactionTable} WHERE type = "$transactionType"''';
+    }
+
     final data = await db.rawQuery(sql);
+
     List<trans.Transaction> transactions = List();
     for (final node in data) {
       final trans.Transaction transaction = trans.Transaction.fromMap(node);
       transactions.add(transaction);
     }
     return transactions;
+  }
+
+  Future<int> countTotalIncome() async {
+    Database db = await dbHelper.initDb();
+    final sql =
+        '''SELECT SUM(spent_value) AS total FROM ${Operation.transactionTable} WHERE type = "income"''';
+
+    final data = await db.rawQuery(sql);
+
+    var result = 0;
+    for (final node in data) {
+      result += node['total'];
+    }
+    return result;
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:edompet/models/transaction.dart';
 import 'package:edompet/repository/db.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -13,98 +14,130 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final Widget bodySection = Column(
-    children: <Widget>[
-      Row(children: <Widget>[
-        Container(
-          child: Text(
-            "Dashboard",
-            style: TextStyle(
-                fontSize: 28.0,
-                color: const Color(0xFF000000),
-                fontWeight: FontWeight.w500,
-                fontFamily: "Roboto"),
-          ),
-          padding: const EdgeInsets.fromLTRB(20.0, 50.0, 1.0, 1.0),
-          alignment: Alignment.topLeft,
-        ),
-        Spacer(),
-        Container(
-          child: SvgPicture.asset(
-            'asset/images/export.svg',
-            color: Colors.blue,
-            height: 24,
-          ),
-          alignment: Alignment.topRight,
-          padding: const EdgeInsets.fromLTRB(1.0, 50.0, 20.0, 1.0),
-        )
-      ]),
-      Container(
-        alignment: Alignment(-1, -1),
-        padding: EdgeInsets.fromLTRB(22, 32, 0, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              child: Text(
-                'Uang bulanan',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 6),
-              child: Text(
-                'Your current money...',
-                style: TextStyle(
-                  fontSize: 23,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Container(
-              height: 4,
-              width: 63,
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: Colors.green,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Rp.',
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  '10.500.000',
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-      Container(
-        height: 500,
-        child: ListViewHome(),
-        width: 1000,
-      ),
-    ],
-  );
+  Operation dbHelper = Operation();
+  Future<int> futureInitMoney;
+
+  void initState() {
+    super.initState();
+    futureInitMoney = dbHelper.countTotalIncome();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(child: bodySection);
+    return FutureBuilder<int>(
+        future: futureInitMoney,
+        builder: (context, snap) {
+          if (snap.hasData) {
+            return SingleChildScrollView(
+                child: Column(
+              children: <Widget>[
+                Row(children: <Widget>[
+                  Container(
+                    child: Text(
+                      "Dashboard",
+                      style: TextStyle(
+                          fontSize: 28.0,
+                          color: const Color(0xFF000000),
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Roboto"),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(20.0, 50.0, 1.0, 1.0),
+                    alignment: Alignment.topLeft,
+                  ),
+                  Spacer(),
+                  Container(
+                    child: SvgPicture.asset(
+                      'asset/images/export.svg',
+                      color: Colors.blue,
+                      height: 24,
+                    ),
+                    alignment: Alignment.topRight,
+                    padding: const EdgeInsets.fromLTRB(1.0, 50.0, 20.0, 1.0),
+                  )
+                ]),
+                Container(
+                  alignment: Alignment(-1, -1),
+                  padding: EdgeInsets.fromLTRB(22, 32, 0, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                          'Uang bulanan',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 6),
+                        child: Text(
+                          'Your current money...',
+                          style: TextStyle(
+                            fontSize: 23,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 4,
+                        width: 63,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Colors.green,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Rp.',
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Container(
+                            width: 300,
+                            child: FittedBox(
+                              child: Text(
+                                FlutterMoneyFormatter(
+                                        amount: snap.data.toDouble(),
+                                        settings: MoneyFormatterSettings(
+                                            symbol: 'IDR',
+                                            thousandSeparator: '.',
+                                            decimalSeparator: ',',
+                                            symbolAndNumberSeparator: ' ',
+                                            fractionDigits: 2,
+                                            compactFormatType:
+                                                CompactFormatType.short))
+                                    .output
+                                    .withoutFractionDigits
+                                    .toString(),
+                                style: TextStyle(
+                                  fontSize: 50,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 500,
+                  child: ListViewHome(),
+                  width: 1000,
+                ),
+              ],
+            ));
+          } else {
+            return Container();
+          }
+        });
   }
 }
 
@@ -112,9 +145,19 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
   Operation dbHelper = Operation();
   Future<List<Transaction>> futureTranscation;
 
+  String transactionType;
+
+  ListViewTransactionsState(String transactiontype) {
+    this.transactionType = transactiontype;
+  }
+
   void updateListView() {
     setState(() {
-      futureTranscation = dbHelper.fetchTransactions();
+      try {
+        futureTranscation = dbHelper.fetchTransactions(this.transactionType);
+      } catch (e) {
+        print('error getting database: $e');
+      }
     });
   }
 
@@ -126,27 +169,6 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
 
   @override
   Widget build(BuildContext context) {
-    // final transactionsData = [
-    //   {
-    //     "title": "Tagihan kartu kredit",
-    //     "date": "4 April 2020",
-    //     "value": 360000,
-    //     "type": "expense"
-    //   },
-    //   {
-    //     "title": "Tagihan netflix",
-    //     "date": "3 April 2020",
-    //     "value": 169000,
-    //     "type": "expense"
-    //   },
-    //   {
-    //     "title": "Jual usb type c hub",
-    //     "date": "1 April 2020",
-    //     "value": 150000,
-    //     "type": "income"
-    //   }
-    // ];
-
     return FutureBuilder<List<Transaction>>(
       future: futureTranscation,
       builder: (context, snap) {
@@ -157,7 +179,6 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
             itemCount: transactionsData.length,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              print(transactionsData[index].type);
               switch (transactionsData[index].type) {
                 case "expense":
                   return Card(
@@ -180,18 +201,33 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                                 fontSize: 17,
                                 color: Colors.white,
                               )),
-                          Text(transactionsData[index].moneySpent.toString(),
-                              style: TextStyle(
-                                fontSize: 29,
-                                color: Colors.white,
-                              )),
+                          Text(
+                            FlutterMoneyFormatter(
+                                    amount: transactionsData[index]
+                                        .moneySpent
+                                        .toDouble(),
+                                    settings: MoneyFormatterSettings(
+                                        symbol: 'IDR',
+                                        thousandSeparator: '.',
+                                        decimalSeparator: ',',
+                                        symbolAndNumberSeparator: ' ',
+                                        fractionDigits: 2,
+                                        compactFormatType:
+                                            CompactFormatType.short))
+                                .output
+                                .withoutFractionDigits
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: 29,
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   );
                   break;
                 case "income":
-                  print('hereee');
                   return Card(
                     color: Color.fromRGBO(64, 152, 100, 1),
                     shape: RoundedRectangleBorder(
@@ -207,16 +243,32 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                                 fontSize: 18,
                                 color: Colors.white,
                               )),
-                          Text(transactionsData[index].dateTime.toString(),
+                          Text(transactionsData[index].getStringCreatedTime,
                               style: TextStyle(
                                 fontSize: 17,
                                 color: Colors.white,
                               )),
-                          Text(transactionsData[index].moneySpent.toString(),
-                              style: TextStyle(
-                                fontSize: 29,
-                                color: Colors.white,
-                              )),
+                          Text(
+                            FlutterMoneyFormatter(
+                                    amount: transactionsData[index]
+                                        .moneySpent
+                                        .toDouble(),
+                                    settings: MoneyFormatterSettings(
+                                        symbol: 'IDR',
+                                        thousandSeparator: '.',
+                                        decimalSeparator: ',',
+                                        symbolAndNumberSeparator: ' ',
+                                        fractionDigits: 2,
+                                        compactFormatType:
+                                            CompactFormatType.short))
+                                .output
+                                .withoutFractionDigits
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: 29,
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -235,8 +287,13 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
 }
 
 class ListViewTransactions extends StatefulWidget {
+  final String transactionType;
+
+  ListViewTransactions({Key key, this.transactionType}) : super(key: key);
+
   @override
-  ListViewTransactionsState createState() => ListViewTransactionsState();
+  ListViewTransactionsState createState() =>
+      ListViewTransactionsState(this.transactionType);
 }
 
 class ListViewHomeState extends State<ListViewHome> {
@@ -295,7 +352,9 @@ class ListViewHomeState extends State<ListViewHome> {
                               ),
                               Container(
                                 alignment: Alignment(-1, -1),
-                                child: ListViewTransactions(),
+                                child: ListViewTransactions(
+                                    transactionType: transactionsData[index]
+                                        ["type"]),
                                 width: 300,
                                 height: 324,
                               ),
