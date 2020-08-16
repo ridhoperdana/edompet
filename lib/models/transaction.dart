@@ -7,6 +7,7 @@ class Transaction {
   int moneySpent = 0;
   DateTime dateTime;
   String id;
+  int walletID = 0;
 
   Transaction(this.type);
 
@@ -17,6 +18,7 @@ class Transaction {
     this.moneySpent = map["spent_value"];
     this.dateTime = DateTime.parse(map["created_time"]);
     this.id = map["id"].toString();
+    this.walletID = map["wallet_id"];
   }
 
   set setShortDescription(String value) => shortDescription;
@@ -25,6 +27,7 @@ class Transaction {
   set setMoneySpent(int value) => moneySpent;
   set setCreatedTime(DateTime value) => dateTime;
   set setId(String value) => id;
+  set setWalletId(int walletID) => walletID;
 
   String get getStringCreatedTime {
     final String dateTimeText =

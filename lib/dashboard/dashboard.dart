@@ -19,7 +19,11 @@ class _DashboardState extends State<Dashboard> {
 
   void initState() {
     super.initState();
-    futureInitMoney = dbHelper.countTotalIncome();
+    try {
+      futureInitMoney = dbHelper.countTotalIncome();
+    } catch (e) {
+      print('Error count $e');
+    }
   }
 
   @override
@@ -100,6 +104,8 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           Container(
                             width: 300,
+                            height: 40,
+                            alignment: Alignment.centerLeft,
                             child: FittedBox(
                               child: Text(
                                 FlutterMoneyFormatter(

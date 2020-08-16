@@ -20,14 +20,17 @@ class SqlLite {
         initial_money INTEGER,
         color TEXT
       );
+    ''');
 
+      await db.execute('''
       CREATE TABLE transactions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         short_description TEXT,
         category TEXT,
         type TEXT,
         spent_value INTEGER,
-        created_time TEXT
+        created_time TEXT,
+        wallet_id INTEGER
       );
     ''');
     } catch (e) {
@@ -44,19 +47,21 @@ class Operation {
     Database db = await dbHelper.initDb();
     final sql = '''INSERT INTO ${Operation.transactionTable}
     (
-      ${transaction.shortDescription},
-      ${transaction.category},
-      ${transaction.type},
-      ${transaction.moneySpent},
-      ${transaction.dateTime},
+      short_description,
+      category,
+      type,
+      spent_value,
+      created_time,
+      wallet_id
     )
-    VALUES (?,?,?,?,?)''';
+    VALUES (?,?,?,?,?,?)''';
     List<dynamic> params = [
       transaction.shortDescription,
       transaction.category,
       transaction.type,
       transaction.moneySpent,
-      transaction.dateTime
+      transaction.dateTime.toIso8601String(),
+      transaction.walletID
     ];
     final result = await db.rawInsert(sql, params);
     return result;
@@ -103,6 +108,7 @@ class Operation {
       final trans.Transaction transaction = trans.Transaction.fromMap(node);
       transactions.add(transaction);
     }
+
     return transactions;
   }
 
@@ -111,12 +117,19 @@ class Operation {
     final sql =
         '''SELECT SUM(spent_value) AS total FROM ${Operation.transactionTable} WHERE type = "income"''';
 
-    final data = await db.rawQuery(sql);
-
     var result = 0;
-    for (final node in data) {
-      result += node['total'];
+    try {
+      final data = await db.rawQuery(sql);
+
+      for (final node in data) {
+        if (node['total'] != null) {
+          result += node['total'];
+        }
+      }
+    } catch (e) {
+      print('Error count income $e');
     }
+
     return result;
   }
 }

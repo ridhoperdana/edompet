@@ -4,6 +4,7 @@ import 'package:edompet/models/transaction.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:edompet/repository/db.dart';
 
 class AddExpenseState extends State<AddExpense>
     with SingleTickerProviderStateMixin {
@@ -11,6 +12,8 @@ class AddExpenseState extends State<AddExpense>
   AnimationController controller;
   final int origin;
   int id = 1;
+
+  Operation dbHelper = Operation();
 
   // final _formKey = GlobalKey();
   final _transaction = Transaction('expense');
@@ -34,6 +37,15 @@ class AddExpenseState extends State<AddExpense>
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     animation = Tween<Offset>(begin: start, end: end).animate(controller);
     controller.forward();
+  }
+
+  void saveData() async {
+    try {
+      await dbHelper.insertTransaction(this._transaction);
+      Navigator.of(context).pushReplacementNamed('/');
+    } catch (e) {
+      print('Error storing data $e');
+    }
   }
 
   void callDatePicker() async {
@@ -191,6 +203,22 @@ class AddExpenseState extends State<AddExpense>
                                 _transaction.shortDescription = val;
                               }),
                             ),
+                            TextFormField(
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                              keyboardType: TextInputType.text,
+                              decoration:
+                                  InputDecoration(labelText: 'Category'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter category of the transaction.';
+                                }
+                              },
+                              onChanged: (val) => setState(() {
+                                _transaction.category = val;
+                              }),
+                            ),
                           ],
                         ),
                       ),
@@ -202,6 +230,7 @@ class AddExpenseState extends State<AddExpense>
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         InkWell(
+                          onTap: () => saveData(),
                           child: Container(
                             child: Card(
                               color: Color.fromRGBO(255, 111, 111, 1),
