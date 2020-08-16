@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:edompet/models/transaction.dart';
 import 'package:edompet/repository/db.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TransactionsState extends State<Transactions>
     with SingleTickerProviderStateMixin {
@@ -102,71 +103,83 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
               scrollDirection: Axis.vertical,
               padding: EdgeInsets.fromLTRB(21, 0, 21, 0),
               itemBuilder: (context, index) {
-                return Container(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          transactionsData[index].shortDescription,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: const Color(0xFF000000),
+                return Slidable(
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(
+                            width: 2, color: Color.fromRGBO(227, 227, 227, 1)),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            transactionsData[index].shortDescription,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: const Color(0xFF000000),
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                        child: Text(
-                          transactionsData[index].getStringCreatedTime,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: const Color(0xFF000000),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                          child: Text(
+                            transactionsData[index].getStringCreatedTime,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: const Color(0xFF000000),
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-                        child: Text(
-                          FlutterMoneyFormatter(
-                                  amount: transactionsData[index]
-                                      .moneySpent
-                                      .toDouble(),
-                                  settings: MoneyFormatterSettings(
-                                      symbol: 'IDR',
-                                      thousandSeparator: '.',
-                                      decimalSeparator: ',',
-                                      symbolAndNumberSeparator: ' ',
-                                      fractionDigits: 2,
-                                      compactFormatType:
-                                          CompactFormatType.short))
-                              .output
-                              .withoutFractionDigits
-                              .toString(),
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: const Color(0xFF000000),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                          child: Text(
+                            FlutterMoneyFormatter(
+                                    amount: transactionsData[index]
+                                        .moneySpent
+                                        .toDouble(),
+                                    settings: MoneyFormatterSettings(
+                                        symbol: 'IDR',
+                                        thousandSeparator: '.',
+                                        decimalSeparator: ',',
+                                        symbolAndNumberSeparator: ' ',
+                                        fractionDigits: 2,
+                                        compactFormatType:
+                                            CompactFormatType.short))
+                                .output
+                                .withoutFractionDigits
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: const Color(0xFF000000),
+                            ),
                           ),
                         ),
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: 400,
-                        ),
-                        child: Container(
-                          height: 2,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            color: Color.fromRGBO(227, 227, 227, 1),
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  actionPane: SlidableBehindActionPane(),
+                  secondaryActions: <Widget>[
+                    IconSlideAction(
+                      caption: 'More',
+                      color: Colors.black45,
+                      icon: Icons.more_horiz,
+                      // onTap: () => _showSnackBar('More'),
+                    ),
+                    IconSlideAction(
+                      caption: 'Delete',
+                      color: Colors.red,
+                      icon: Icons.delete,
+                      // onTap: () => _showSnackBar('Delete'),
+                    ),
+                  ],
                 );
               },
             );
