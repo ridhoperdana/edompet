@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:edompet/models/transaction.dart' as trans;
+import 'package:edompet/models/wallet.dart';
 
 class SqlLite {
   Future<Database> initDb() async {
@@ -17,7 +18,6 @@ class SqlLite {
       CREATE TABLE wallet (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        initial_money INTEGER,
         color TEXT
       );
     ''');
@@ -89,16 +89,17 @@ class Operation {
   // }
 
   Future<List<trans.Transaction>> fetchTransactions(
-      String transactionType) async {
+      String transactionType, int walletID) async {
     Database db = await dbHelper.initDb();
     var sql = '';
     switch (transactionType) {
       case 'all':
-        sql = '''SELECT * FROM ${Operation.transactionTable}''';
+        sql =
+            '''SELECT * FROM ${Operation.transactionTable} WHERE wallet_id = $walletID''';
         break;
       default:
         sql =
-            '''SELECT * FROM ${Operation.transactionTable} WHERE type = "$transactionType"''';
+            '''SELECT * FROM ${Operation.transactionTable} WHERE type = "$transactionType" AND wallet_id = $walletID''';
     }
 
     final data = await db.rawQuery(sql);
@@ -112,10 +113,10 @@ class Operation {
     return transactions;
   }
 
-  Future<int> countTotalIncome() async {
+  Future<int> countTotalIncome(int walletID) async {
     Database db = await dbHelper.initDb();
     final sql =
-        '''SELECT SUM(spent_value) AS total FROM ${Operation.transactionTable} WHERE type = "income"''';
+        '''SELECT SUM(spent_value) AS total FROM ${Operation.transactionTable} WHERE type = "income" AND wallet_id = $walletID''';
 
     var result = 0;
     try {
@@ -131,5 +132,71 @@ class Operation {
     }
 
     return result;
+  }
+
+  Future<int> countTotalExpense(int walletID) async {
+    Database db = await dbHelper.initDb();
+    final sql =
+        '''SELECT SUM(spent_value) AS total FROM ${Operation.transactionTable} 
+        WHERE type = "expense" AND wallet_id = $walletID''';
+
+    var result = 0;
+    try {
+      final data = await db.rawQuery(sql);
+
+      for (final node in data) {
+        if (node['total'] != null) {
+          result += node['total'];
+        }
+      }
+    } catch (e) {
+      print('Error count expense $e');
+    }
+
+    return result;
+  }
+
+  Future<Wallet> getWallet(int walletID) async {
+    Database db = await dbHelper.initDb();
+    final sql = '''SELECT id, name, color FROM wallet WHERE id = $walletID''';
+
+    Wallet wallet;
+    try {
+      final data = await db.rawQuery(sql);
+
+      for (final node in data) {
+        if (node != null) {
+          wallet = Wallet.fromMap(node);
+          var income = await countTotalIncome(walletID);
+          var expense = await countTotalExpense(walletID);
+          wallet.initialMoney = income - expense;
+        }
+      }
+    } catch (e) {
+      print('Error get wallet $e');
+    }
+
+    return wallet;
+  }
+
+  Future<List<Wallet>> fetchWallet() async {
+    Database db = await dbHelper.initDb();
+    var sql = '''SELECT id, name, color FROM wallet''';
+    List<Wallet> wallets = List();
+    try {
+      final data = await db.rawQuery(sql);
+      for (final node in data) {
+        final Wallet wallet = Wallet.fromMap(node);
+        var walletID = int.parse(wallet.id);
+        var income = await countTotalIncome(walletID);
+        var expense = await countTotalExpense(walletID);
+        wallet.initialMoney = income - expense;
+        wallets.add(wallet);
+      }
+    } catch (e) {
+      print('error fetch wallet: $e');
+    }
+
+    return wallets;
   }
 }

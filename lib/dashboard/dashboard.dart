@@ -1,3 +1,4 @@
+import 'package:edompet/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/rendering.dart';
@@ -5,6 +6,8 @@ import 'package:edompet/models/transaction.dart';
 import 'package:edompet/repository/db.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:edompet/service/service.dart';
+import 'package:edompet/models/wallet.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -14,13 +17,13 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  Operation dbHelper = Operation();
-  Future<int> futureInitMoney;
+  Future<DataDashboard> data;
+  Service service = Service();
 
   void initState() {
     super.initState();
     try {
-      futureInitMoney = dbHelper.countTotalIncome();
+      data = service.getData();
     } catch (e) {
       print('Error count $e');
     }
@@ -28,8 +31,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<int>(
-        future: futureInitMoney,
+    return FutureBuilder<DataDashboard>(
+        future: data,
         builder: (context, snap) {
           if (snap.hasData) {
             return SingleChildScrollView(
@@ -67,10 +70,10 @@ class _DashboardState extends State<Dashboard> {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          'Uang bulanan',
+                          snap.data.getWallet.name,
                           style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
@@ -80,7 +83,7 @@ class _DashboardState extends State<Dashboard> {
                           'Your current money...',
                           style: TextStyle(
                             fontSize: 23,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                       ),
@@ -89,7 +92,7 @@ class _DashboardState extends State<Dashboard> {
                         width: 63,
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
-                          color: Colors.green,
+                          color: HexColor(snap.data.getWallet.color),
                         ),
                       ),
                       Row(
@@ -109,7 +112,8 @@ class _DashboardState extends State<Dashboard> {
                             child: FittedBox(
                               child: Text(
                                 FlutterMoneyFormatter(
-                                        amount: snap.data.toDouble(),
+                                        amount: snap.data.getWallet.initialMoney
+                                            .toDouble(),
                                         settings: MoneyFormatterSettings(
                                             symbol: 'IDR',
                                             thousandSeparator: '.',
@@ -135,7 +139,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 Container(
                   height: 500,
-                  child: ListViewHome(),
+                  child: ListViewHome(int.parse(snap.data.getWallet.id)),
                   width: 1000,
                 ),
               ],
@@ -152,15 +156,18 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
   Future<List<Transaction>> futureTranscation;
 
   String transactionType;
+  int walletID;
 
-  ListViewTransactionsState(String transactiontype) {
+  ListViewTransactionsState(String transactiontype, int walletID) {
     this.transactionType = transactiontype;
+    this.walletID = walletID;
   }
 
   void updateListView() {
     setState(() {
       try {
-        futureTranscation = dbHelper.fetchTransactions(this.transactionType);
+        futureTranscation =
+            dbHelper.fetchTransactions(this.transactionType, this.walletID);
       } catch (e) {
         print('error getting database: $e');
       }
@@ -294,18 +301,20 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
 
 class ListViewTransactions extends StatefulWidget {
   final String transactionType;
+  final int walletID;
 
-  ListViewTransactions({Key key, this.transactionType}) : super(key: key);
+  ListViewTransactions({Key key, this.transactionType, this.walletID})
+      : super(key: key);
 
   @override
   ListViewTransactionsState createState() =>
-      ListViewTransactionsState(this.transactionType);
+      ListViewTransactionsState(this.transactionType, this.walletID);
 }
 
 class ListViewHomeState extends State<ListViewHome> {
   void _allTransactions(String transactionType) {
-    Navigator.of(context)
-        .pushNamed("/transactions", arguments: transactionType);
+    Navigator.of(context).pushNamed("/transactions",
+        arguments: '$transactionType:${widget.walletID}');
   }
 
   @override
@@ -360,7 +369,8 @@ class ListViewHomeState extends State<ListViewHome> {
                                 alignment: Alignment(-1, -1),
                                 child: ListViewTransactions(
                                     transactionType: transactionsData[index]
-                                        ["type"]),
+                                        ["type"],
+                                    walletID: widget.walletID),
                                 width: 300,
                                 height: 324,
                               ),
@@ -403,6 +413,9 @@ class ListViewHomeState extends State<ListViewHome> {
 }
 
 class ListViewHome extends StatefulWidget {
+  final int walletID;
+  ListViewHome(this.walletID);
+
   @override
   ListViewHomeState createState() => ListViewHomeState();
 }

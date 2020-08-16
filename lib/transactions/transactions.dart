@@ -7,15 +7,22 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class TransactionsState extends State<Transactions>
     with SingleTickerProviderStateMixin {
   String headerTitle = '';
+  String transactionType = '';
+  int walletID = 0;
 
   @override
   void initState() {
     super.initState();
-    if (widget.transactionType == 'expense') {
+    var transactionIDAndWalletIDSplitted =
+        widget.transactionTypeWithWalletID.split(":");
+
+    this.transactionType = transactionIDAndWalletIDSplitted[0];
+    this.walletID = int.parse(transactionIDAndWalletIDSplitted[1]);
+    if (transactionType == 'expense') {
       this.headerTitle = 'All Expenses';
-    } else if (widget.transactionType == 'income') {
+    } else if (transactionType == 'income') {
       this.headerTitle = 'All Incomes';
-    } else if (widget.transactionType == 'all') {
+    } else if (transactionType == 'all') {
       this.headerTitle = 'All Transactions';
     }
   }
@@ -57,7 +64,7 @@ class TransactionsState extends State<Transactions>
                 )),
             Expanded(
                 child: Container(
-              child: ListViewTransactions(widget.transactionType),
+              child: ListViewTransactions(this.transactionType, this.walletID),
               width: 400,
               height: 580,
             )),
@@ -69,8 +76,9 @@ class TransactionsState extends State<Transactions>
 }
 
 class Transactions extends StatefulWidget {
-  final String transactionType;
-  Transactions(this.transactionType);
+  final String transactionTypeWithWalletID;
+
+  Transactions(this.transactionTypeWithWalletID);
 
   @override
   TransactionsState createState() => TransactionsState();
@@ -81,14 +89,17 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
   Future<List<Transaction>> futureTranscation;
 
   String transactionType;
+  int walletID;
 
-  ListViewTransactionsState(String transactiontype) {
+  ListViewTransactionsState(String transactiontype, int walletID) {
     this.transactionType = transactiontype;
+    this.walletID = walletID;
   }
 
   void initState() {
     super.initState();
-    futureTranscation = dbHelper.fetchTransactions(this.transactionType);
+    futureTranscation =
+        dbHelper.fetchTransactions(this.transactionType, this.walletID);
   }
 
   @override
@@ -192,10 +203,11 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
 
 class ListViewTransactions extends StatefulWidget {
   final String transactionType;
+  final int walletID;
 
-  ListViewTransactions(this.transactionType);
+  ListViewTransactions(this.transactionType, this.walletID);
 
   @override
   ListViewTransactionsState createState() =>
-      ListViewTransactionsState(this.transactionType);
+      ListViewTransactionsState(this.transactionType, this.walletID);
 }

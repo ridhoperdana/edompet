@@ -1,6 +1,9 @@
+import 'package:edompet/models/wallet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:edompet/utils.dart';
+import 'package:edompet/repository/db.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 
 class ManageWalletState extends State<ManageWallet>
     with SingleTickerProviderStateMixin {
@@ -77,58 +80,79 @@ class ManageWallet extends StatefulWidget {
 }
 
 class ListViewTransactionsState extends State<ListViewTransactions> {
+  Operation dbHelper = Operation();
+  Future<List<Wallet>> futureWallet;
+
+  void initState() {
+    super.initState();
+    try {
+      futureWallet = dbHelper.fetchWallet();
+    } catch (e) {
+      print('Fetch wallet error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final walletsData = [
-      {"name": "Uang Bulanan", "value": 360000, "color": "#409864"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-      {"name": "Tabungan Beli Game", "value": 169000, "color": "#ED7628"},
-    ];
-
-    return ListView.builder(
-      itemCount: walletsData.length,
-      scrollDirection: Axis.vertical,
-      padding: EdgeInsets.fromLTRB(21, 0, 20, 0),
-      itemBuilder: (context, index) {
-        return Container(
-          child: Card(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
-            elevation: 5,
-            color: HexColor(walletsData[index]["color"]),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16.3, 26, 16.3, 26),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(walletsData[index]["name"],
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      )),
-                  Text(walletsData[index]["value"].toString(),
-                      style: TextStyle(
-                        fontSize: 29,
-                        color: Colors.white,
-                      )),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    return FutureBuilder<List<Wallet>>(
+        future: futureWallet,
+        builder: (context, snap) {
+          if (snap.hasData) {
+            List<Wallet> walletsData = snap.data.toList();
+            return ListView.builder(
+              itemCount: walletsData.length,
+              scrollDirection: Axis.vertical,
+              padding: EdgeInsets.fromLTRB(21, 0, 20, 0),
+              itemBuilder: (context, index) {
+                return Container(
+                  child: Card(
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                    elevation: 5,
+                    color: HexColor(walletsData[index].color),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(16.3, 26, 16.3, 26),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(walletsData[index].name,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              )),
+                          Text(
+                              FlutterMoneyFormatter(
+                                      amount: walletsData[index]
+                                          .initialMoney
+                                          .toDouble(),
+                                      settings: MoneyFormatterSettings(
+                                          symbol: 'IDR',
+                                          thousandSeparator: '.',
+                                          decimalSeparator: ',',
+                                          symbolAndNumberSeparator: ' ',
+                                          fractionDigits: 2,
+                                          compactFormatType:
+                                              CompactFormatType.short))
+                                  .output
+                                  .withoutFractionDigits
+                                  .toString(),
+                              style: TextStyle(
+                                fontSize: 29,
+                                color: Colors.white,
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 }
 

@@ -26,6 +26,7 @@ dependencies:
   path_provider: any
   flutter_money_formatter: ^0.8.3
   flutter_slidable: "^0.5.5"
+  shared_preferences: ^0.5.8
   flutter:
     sdk: flutter
 
