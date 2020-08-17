@@ -17,6 +17,9 @@ class AddExpenseState extends State<AddExpense> {
 
   Service service = Service();
 
+  Color cardColor = Color.fromRGBO(255, 111, 111, 1);
+  String headerTitle = 'Add Expense';
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +28,16 @@ class AddExpenseState extends State<AddExpense> {
       dateTimeText =
           DateFormat('d MMMM y', 'id_ID').format(this._transaction.dateTime);
       dateCtl.text = dateTimeText;
+      switch (widget.transaction.type) {
+        case "income":
+          cardColor = Color.fromRGBO(64, 152, 100, 1);
+          headerTitle = 'Edit Income';
+          break;
+        case "expense":
+          headerTitle = 'Edit Expense';
+          break;
+        default:
+      }
     }
   }
 
@@ -94,7 +107,7 @@ class AddExpenseState extends State<AddExpense> {
                 children: <Widget>[
                   Container(
                     child: Text(
-                      "Add Expense",
+                      headerTitle,
                       style: TextStyle(
                           fontSize: 28.0,
                           color: const Color(0xFF000000),
@@ -110,7 +123,7 @@ class AddExpenseState extends State<AddExpense> {
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 27),
                     child: Card(
                       elevation: 5,
-                      color: Color.fromRGBO(255, 111, 111, 1),
+                      color: cardColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -166,6 +179,7 @@ class AddExpenseState extends State<AddExpense> {
                                 if (value.isEmpty) {
                                   return 'Please enter money spent value.';
                                 }
+                                return '';
                               },
                               onChanged: (val) => setState(() {
                                 _transaction.moneySpent = int.parse(val);
@@ -182,6 +196,7 @@ class AddExpenseState extends State<AddExpense> {
                                 if (value.isEmpty) {
                                   return 'Please enter the date transaction happen';
                                 }
+                                return '';
                               },
                               onTap: () {
                                 FocusScope.of(context)
@@ -204,6 +219,7 @@ class AddExpenseState extends State<AddExpense> {
                                 if (value.isEmpty) {
                                   return 'Please enter short description for the transaction.';
                                 }
+                                return '';
                               },
                               onChanged: (val) => setState(() {
                                 _transaction.shortDescription = val;
@@ -240,7 +256,7 @@ class AddExpenseState extends State<AddExpense> {
                           onTap: () => saveData(),
                           child: Container(
                             child: Card(
-                              color: Color.fromRGBO(255, 111, 111, 1),
+                              color: cardColor,
                               child: Container(
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.all(10),
