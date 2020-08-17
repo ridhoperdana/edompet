@@ -1,24 +1,17 @@
 import 'package:edompet/service/service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
 import 'package:edompet/models/transaction.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:edompet/repository/db.dart';
 
-class AddIncomeState extends State<AddIncome>
-    with SingleTickerProviderStateMixin {
-  Animation<Offset> animation;
-  AnimationController controller;
-  final int origin;
+class AddIncomeState extends State<AddIncome> {
   int id = 2;
 
   Operation dbHelper = Operation();
 
   Service service = Service();
-
-  AddIncomeState(this.origin);
 
   final _transaction = Transaction('income');
   TextEditingController dateCtl = TextEditingController();
@@ -27,18 +20,6 @@ class AddIncomeState extends State<AddIncome>
   @override
   void initState() {
     super.initState();
-    Offset start = Offset(-1, 0.0);
-    Offset end = Offset.zero;
-
-    if (this.origin < id) {
-      start = Offset(1, 0.0);
-      end = Offset.zero;
-    }
-
-    controller =
-        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
-    animation = Tween<Offset>(begin: start, end: end).animate(controller);
-    controller.forward();
   }
 
   void saveData() async {
@@ -83,8 +64,6 @@ class AddIncomeState extends State<AddIncome>
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: SlideTransition(
-      position: animation,
       child: Padding(
         padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
         child: Center(
@@ -253,22 +232,15 @@ class AddIncomeState extends State<AddIncome>
           ],
         )),
       ),
-    ));
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+    );
   }
 }
 
 class AddIncome extends StatefulWidget {
-  final int origin;
   final Function changeTab;
 
-  AddIncome(this.origin, this.changeTab);
+  AddIncome(this.changeTab);
 
   @override
-  AddIncomeState createState() => AddIncomeState(this.origin);
+  AddIncomeState createState() => AddIncomeState();
 }
