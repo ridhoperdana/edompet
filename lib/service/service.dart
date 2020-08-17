@@ -5,6 +5,15 @@ import 'package:edompet/models/wallet.dart';
 class Service {
   Operation dbHelper = Operation();
 
+  void updateCurrentWallet(String walletID) async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('wallet_id', int.parse(walletID));
+    } catch (e) {
+      print('Error update wallet $e');
+    }
+  }
+
   Future<DataDashboard> getData() async {
     DataDashboard data;
     try {

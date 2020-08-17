@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:edompet/models/transaction.dart';
 import 'package:edompet/repository/db.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TransactionsState extends State<Transactions>
@@ -179,16 +180,34 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                   actionPane: SlidableBehindActionPane(),
                   secondaryActions: <Widget>[
                     IconSlideAction(
-                      caption: 'More',
+                      caption: 'Edit',
                       color: Colors.black45,
-                      icon: Icons.more_horiz,
-                      // onTap: () => _showSnackBar('More'),
+                      icon: Icons.edit,
                     ),
                     IconSlideAction(
                       caption: 'Delete',
                       color: Colors.red,
                       icon: Icons.delete,
-                      // onTap: () => _showSnackBar('Delete'),
+                      onTap: () => showDialog(
+                          context: context,
+                          child: PlatformAlertDialog(
+                            title: Text("Delete Confirmation"),
+                            content: Text("Are you sure want to delete?"),
+                            actions: [
+                              FlatButton(
+                                child: Text("No"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              FlatButton(
+                                child: Text("Yes"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          )),
                     ),
                   ],
                 );

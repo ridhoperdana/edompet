@@ -36,113 +36,117 @@ class _DashboardState extends State<Dashboard> {
         builder: (context, snap) {
           if (snap.hasData) {
             return SingleChildScrollView(
-                child: Column(
-              children: <Widget>[
-                Row(children: <Widget>[
-                  Container(
-                    child: Text(
-                      "Dashboard",
-                      style: TextStyle(
-                          fontSize: 28.0,
-                          color: const Color(0xFF000000),
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Roboto"),
+                child: Container(
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Row(children: <Widget>[
+                    Container(
+                      child: Text(
+                        "Dashboard",
+                        style: TextStyle(
+                            fontSize: 28.0,
+                            color: const Color(0xFF000000),
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Roboto"),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(20.0, 50.0, 1.0, 1.0),
+                      alignment: Alignment.topLeft,
                     ),
-                    padding: const EdgeInsets.fromLTRB(20.0, 50.0, 1.0, 1.0),
-                    alignment: Alignment.topLeft,
-                  ),
-                  Spacer(),
+                    Spacer(),
+                    Container(
+                      child: SvgPicture.asset(
+                        'asset/images/export.svg',
+                        color: Colors.blue,
+                        height: 24,
+                      ),
+                      alignment: Alignment.topRight,
+                      padding: const EdgeInsets.fromLTRB(1.0, 50.0, 20.0, 1.0),
+                    )
+                  ]),
                   Container(
-                    child: SvgPicture.asset(
-                      'asset/images/export.svg',
-                      color: Colors.blue,
-                      height: 24,
-                    ),
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.fromLTRB(1.0, 50.0, 20.0, 1.0),
-                  )
-                ]),
-                Container(
-                  alignment: Alignment(-1, -1),
-                  padding: EdgeInsets.fromLTRB(22, 32, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          snap.data.getWallet.name,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 6),
-                        child: Text(
-                          'Your current money...',
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 4,
-                        width: 63,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: HexColor(snap.data.getWallet.color),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Rp.',
+                    alignment: Alignment(-1, -1),
+                    padding: EdgeInsets.fromLTRB(22, 32, 0, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            snap.data.getWallet.name,
                             style: TextStyle(
-                              fontSize: 19,
+                              fontSize: 20,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          Container(
-                            width: 300,
-                            height: 40,
-                            alignment: Alignment.centerLeft,
-                            child: FittedBox(
-                              child: Text(
-                                FlutterMoneyFormatter(
-                                        amount: snap.data.getWallet.initialMoney
-                                            .toDouble(),
-                                        settings: MoneyFormatterSettings(
-                                            symbol: 'IDR',
-                                            thousandSeparator: '.',
-                                            decimalSeparator: ',',
-                                            symbolAndNumberSeparator: ' ',
-                                            fractionDigits: 2,
-                                            compactFormatType:
-                                                CompactFormatType.short))
-                                    .output
-                                    .withoutFractionDigits
-                                    .toString(),
-                                style: TextStyle(
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.w700,
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 6),
+                          child: Text(
+                            'Your current money...',
+                            style: TextStyle(
+                              fontSize: 23,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 4,
+                          width: 63,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: HexColor(snap.data.getWallet.color),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Rp.',
+                              style: TextStyle(
+                                fontSize: 19,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Container(
+                              width: 300,
+                              height: 40,
+                              alignment: Alignment.centerLeft,
+                              child: FittedBox(
+                                child: Text(
+                                  FlutterMoneyFormatter(
+                                          amount: snap
+                                              .data.getWallet.initialMoney
+                                              .toDouble(),
+                                          settings: MoneyFormatterSettings(
+                                              symbol: 'IDR',
+                                              thousandSeparator: '.',
+                                              decimalSeparator: ',',
+                                              symbolAndNumberSeparator: ' ',
+                                              fractionDigits: 2,
+                                              compactFormatType:
+                                                  CompactFormatType.short))
+                                      .output
+                                      .withoutFractionDigits
+                                      .toString(),
+                                  style: TextStyle(
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  height: 500,
-                  child: ListViewHome(int.parse(snap.data.getWallet.id)),
-                  width: 1000,
-                ),
-              ],
+                  Container(
+                    height: 500,
+                    child: ListViewHome(int.parse(snap.data.getWallet.id)),
+                    width: 1000,
+                  ),
+                ],
+              ),
             ));
           } else {
             return Container();

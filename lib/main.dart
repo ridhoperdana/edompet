@@ -61,7 +61,7 @@ class _AppState extends State<App> {
         var routes = <String, WidgetBuilder>{
           '/transactions': (context) => Transactions(settings.arguments),
           '/new-wallet': (context) => AddWallet(),
-          '/': (context) => Dashboard(),
+          '/dashboard': (context) => Dashboard(),
         };
         WidgetBuilder builder = routes[settings.name];
         if (settings.name == '/new-wallet') {
