@@ -43,6 +43,7 @@ class Operation {
   static const transactionTable = 'transactions';
 
   SqlLite dbHelper = new SqlLite();
+
   Future<int> insertTransaction(trans.Transaction transaction) async {
     Database db = await dbHelper.initDb();
     final sql = '''INSERT INTO ${Operation.transactionTable}
@@ -67,6 +68,19 @@ class Operation {
     return result;
   }
 
+  Future<int> insertWallet(Wallet wallet) async {
+    Database db = await dbHelper.initDb();
+    final sql = '''INSERT INTO wallet
+    (
+      name,
+      color
+    )
+    VALUES (?,?)''';
+    List<dynamic> params = [wallet.name, wallet.color];
+    final result = await db.rawInsert(sql, params);
+    return result;
+  }
+
   // Future<int> updateTransaction(trans.Transaction transaction) async {
   //   Database db = await dbHelper.initDb();
   //   final sql = '''UPDATE ${Operation.transactionTable}
@@ -78,15 +92,15 @@ class Operation {
   //   return result;
   // }
 
-  // Future<int> delete(ClassPenangkap todo) async {
-  //   Database db = await dbHelper.initDb();
-  //   final sql = '''DELETE FROM ${CRUD.todoTable}
-  //   WHERE ${CRUD.id} = ?
-  //   ''';
-  //   List<dynamic> params = [todo.id];
-  //   final result = await db.rawDelete(sql, params);
-  //   return result;
-  // }
+  Future<int> deleteTransaction(int id) async {
+    Database db = await dbHelper.initDb();
+    final sql = '''DELETE FROM transactions
+    WHERE id = ?
+    ''';
+    List<dynamic> params = [id];
+    final result = await db.rawDelete(sql, params);
+    return result;
+  }
 
   Future<List<trans.Transaction>> fetchTransactions(
       String transactionType, int walletID) async {

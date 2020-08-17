@@ -44,4 +44,17 @@ class Service {
     }
     return walletID;
   }
+
+  Future<bool> deleteTransaction(int id) async {
+    try {
+      var deletedID = await dbHelper.deleteTransaction(id);
+      if (deletedID > 0) {
+        return true;
+      }
+    } catch (e) {
+      print('Failed to delete transaction');
+    }
+
+    return false;
+  }
 }

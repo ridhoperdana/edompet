@@ -1,17 +1,39 @@
+import 'package:edompet/models/transaction.dart';
+import 'package:edompet/service/service.dart';
+import 'package:edompet/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:edompet/models/wallet.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:edompet/repository/db.dart';
 
 class AddWalletState extends State<AddWallet> {
   int id = 2;
 
-  AddWalletState();
-
-  // final _formKey = GlobalKey();
   Wallet wallet = Wallet('', 0, '');
   Color currentColor = Color.fromRGBO(64, 152, 100, 1);
 
+  Operation dbHelper = Operation();
+  Service service = Service();
+
   void changeColor(Color color) => setState(() => currentColor = color);
+
+  void saveData() async {
+    try {
+      this.wallet.color =
+          '#${this.currentColor.value.toRadixString(16).substring(2, 8)}';
+      var walletID = await dbHelper.insertWallet(this.wallet);
+      var transaction = Transaction('income');
+      transaction.category = 'income';
+      transaction.shortDescription = 'Initial Money';
+      transaction.moneySpent = this.wallet.initialMoney;
+      transaction.dateTime = DateTime.now();
+      transaction.walletID = walletID;
+      await dbHelper.insertTransaction(transaction);
+      Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+    } catch (e) {
+      print('Error storing wallet $e');
+    }
+  }
 
   @override
   void initState() {
@@ -114,7 +136,7 @@ class AddWalletState extends State<AddWallet> {
                               ),
                               keyboardType: TextInputType.number,
                               decoration:
-                                  InputDecoration(labelText: 'Money Spent'),
+                                  InputDecoration(labelText: 'Initial Money'),
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Please enter initial money value';
@@ -204,38 +226,42 @@ class AddWalletState extends State<AddWallet> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Select a color'),
-                                    content: SingleChildScrollView(
-                                      child: BlockPicker(
-                                        pickerColor: currentColor,
-                                        onColorChanged: changeColor,
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Select a color'),
+                                      content: SingleChildScrollView(
+                                        child: BlockPicker(
+                                          pickerColor: currentColor,
+                                          onColorChanged: changeColor,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                });
-                          },
-                          child: Container(
-                            child: Card(
-                              color: Color.fromRGBO(64, 152, 100, 1),
+                                    );
+                                  });
+                            },
+                            child: InkWell(
+                              onTap: () {
+                                saveData();
+                              },
                               child: Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(10),
-                                width: 90,
-                                child: Text(
-                                  'Save',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
+                                child: Card(
+                                  color: Color.fromRGBO(64, 152, 100, 1),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.all(10),
+                                    width: 90,
+                                    child: Text(
+                                      'Save',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                  ),
+                                  elevation: 5,
                                 ),
                               ),
-                              elevation: 5,
-                            ),
-                          ),
-                        ),
+                            )),
                       ],
                     ),
                   ),

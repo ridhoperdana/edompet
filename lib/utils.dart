@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {

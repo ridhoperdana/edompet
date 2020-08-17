@@ -62,6 +62,7 @@ class _AppState extends State<App> {
           '/transactions': (context) => Transactions(settings.arguments),
           '/new-wallet': (context) => AddWallet(),
           '/dashboard': (context) => Dashboard(),
+          '/manage-wallet': (context) => ManageWallet(settings.arguments),
         };
         WidgetBuilder builder = routes[settings.name];
         if (settings.name == '/new-wallet') {

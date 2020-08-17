@@ -1,3 +1,4 @@
+import 'package:edompet/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:edompet/models/transaction.dart';
 import 'package:edompet/repository/db.dart';
@@ -92,6 +93,8 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
   String transactionType;
   int walletID;
 
+  Service service = Service();
+
   ListViewTransactionsState(String transactiontype, int walletID) {
     this.transactionType = transactiontype;
     this.walletID = walletID;
@@ -101,6 +104,10 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
     super.initState();
     futureTranscation =
         dbHelper.fetchTransactions(this.transactionType, this.walletID);
+  }
+
+  void delete(int id) async {
+    await service.deleteTransaction(id);
   }
 
   @override
@@ -203,7 +210,9 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                               FlatButton(
                                 child: Text("Yes"),
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  delete(int.parse(transactionsData[index].id));
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context, "/", (route) => false);
                                 },
                               ),
                             ],
