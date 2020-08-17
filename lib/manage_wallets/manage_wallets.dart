@@ -80,6 +80,10 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
     }
   }
 
+  void delete(int id) async {
+    await service.deleteWallet(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Wallet>>(
@@ -98,22 +102,71 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                       showPlatformModalSheet(
                           context: context,
                           builder: (BuildContext context) {
-                            return CupertinoActionSheet(
-                              actions: [
-                                CupertinoActionSheetAction(
-                                    onPressed: () {
-                                      service.updateCurrentWallet(
-                                          walletsData[index].id);
-                                      Navigator.pop(context);
-                                      widget.changeToTab(0);
-                                    },
-                                    child: Text('Choose')),
-                                CupertinoActionSheetAction(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('Edit')),
-                              ],
+                            return PlatformWidget(
+                              cupertino: (_, __) {
+                                return CupertinoActionSheet(
+                                  actions: [
+                                    CupertinoActionSheetAction(
+                                        onPressed: () {
+                                          service.updateCurrentWallet(
+                                              walletsData[index].id);
+                                          Navigator.pop(context);
+                                          widget.changeToTab(0);
+                                        },
+                                        child: Text('Choose')),
+                                    CupertinoActionSheetAction(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('Edit')),
+                                    CupertinoActionSheetAction(
+                                        onPressed: () {
+                                          delete(
+                                              int.parse(walletsData[index].id));
+                                          Navigator.pop(context);
+                                          Navigator.pushNamedAndRemoveUntil(
+                                              context, "/", (route) => false);
+                                        },
+                                        child: Text(
+                                          'Delete',
+                                          style: TextStyle(color: Colors.red),
+                                        )),
+                                  ],
+                                );
+                              },
+                              material: (_, __) {
+                                return Container(
+                                  child: Wrap(
+                                    children: <Widget>[
+                                      ListTile(
+                                          title: Text('Choose'),
+                                          onTap: () {
+                                            service.updateCurrentWallet(
+                                                walletsData[index].id);
+                                            Navigator.pop(context);
+                                            widget.changeToTab(0);
+                                          }),
+                                      ListTile(
+                                        title: Text('Edit'),
+                                        onTap: () => {},
+                                      ),
+                                      ListTile(
+                                        title: Text(
+                                          'Delete',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                        onTap: () {
+                                          delete(
+                                              int.parse(walletsData[index].id));
+                                          Navigator.pop(context);
+                                          Navigator.pushNamedAndRemoveUntil(
+                                              context, "/", (route) => false);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             );
                           });
                     },

@@ -102,6 +102,24 @@ class Operation {
     return result;
   }
 
+  Future<int> deleteWallet(int id) async {
+    Database db = await dbHelper.initDb();
+
+    var sql = '''DELETE FROM transactions
+    WHERE wallet_id = ?
+    ''';
+    List<dynamic> params = [id];
+    var result = await db.rawDelete(sql, params);
+
+    sql = '''DELETE FROM wallet
+    WHERE id = ?
+    ''';
+
+    params = [id];
+    result = await db.rawDelete(sql, params);
+    return result;
+  }
+
   Future<List<trans.Transaction>> fetchTransactions(
       String transactionType, int walletID) async {
     Database db = await dbHelper.initDb();
