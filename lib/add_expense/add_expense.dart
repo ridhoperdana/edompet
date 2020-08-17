@@ -1,3 +1,4 @@
+import 'package:edompet/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:edompet/models/transaction.dart';
@@ -15,10 +16,11 @@ class AddExpenseState extends State<AddExpense>
 
   Operation dbHelper = Operation();
 
-  // final _formKey = GlobalKey();
   final _transaction = Transaction('expense');
   TextEditingController dateCtl = TextEditingController();
   String dateTimeText = '';
+
+  Service service = Service();
 
   AddExpenseState(this.origin);
 
@@ -41,8 +43,10 @@ class AddExpenseState extends State<AddExpense>
 
   void saveData() async {
     try {
+      var walletID = await service.getWalletID();
+      this._transaction.walletID = walletID;
       await dbHelper.insertTransaction(this._transaction);
-      Navigator.of(context).pushReplacementNamed('/');
+      widget.changeTab(0);
     } catch (e) {
       print('Error storing data $e');
     }
@@ -267,8 +271,9 @@ class AddExpenseState extends State<AddExpense>
 
 class AddExpense extends StatefulWidget {
   final int origin;
+  final Function changeTab;
 
-  AddExpense(this.origin);
+  AddExpense(this.origin, this.changeTab);
 
   @override
   AddExpenseState createState() => AddExpenseState(this.origin);

@@ -31,4 +31,17 @@ class Service {
     }
     return data;
   }
+
+  Future<int> getWalletID() async {
+    int walletID = 1;
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      if (prefs.get('wallet_id') != null) {
+        walletID = prefs.get('wallet_id');
+      }
+    } catch (e) {
+      print('error getting dashboard data: $e');
+    }
+    return walletID;
+  }
 }

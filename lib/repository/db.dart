@@ -95,11 +95,13 @@ class Operation {
     switch (transactionType) {
       case 'all':
         sql =
-            '''SELECT * FROM ${Operation.transactionTable} WHERE wallet_id = $walletID''';
+            '''SELECT * FROM ${Operation.transactionTable} WHERE wallet_id = $walletID
+            ORDER BY datetime(created_time) DESC''';
         break;
       default:
-        sql =
-            '''SELECT * FROM ${Operation.transactionTable} WHERE type = "$transactionType" AND wallet_id = $walletID''';
+        sql = '''SELECT * FROM ${Operation.transactionTable} 
+            WHERE type = "$transactionType" AND wallet_id = $walletID
+            ORDER BY datetime(created_time) DESC''';
     }
 
     final data = await db.rawQuery(sql);

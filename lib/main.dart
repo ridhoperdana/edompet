@@ -35,9 +35,9 @@ class _AppState extends State<App> {
     super.initState();
     _children = [
       Dashboard(),
-      AddExpense(_currentIndex),
-      AddIncome(_currentIndex),
-      ManageWallet(),
+      AddExpense(_currentIndex, onTabTapped),
+      AddIncome(_currentIndex, onTabTapped),
+      ManageWallet(onTabTapped),
     ];
   }
 
@@ -46,9 +46,9 @@ class _AppState extends State<App> {
     super.setState(fn);
     _children = [
       Dashboard(),
-      AddExpense(_prevState),
-      AddIncome(_prevState),
-      ManageWallet(),
+      AddExpense(_prevState, onTabTapped),
+      AddIncome(_prevState, onTabTapped),
+      ManageWallet(onTabTapped),
     ];
   }
 

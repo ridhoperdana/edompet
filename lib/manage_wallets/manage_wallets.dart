@@ -57,7 +57,7 @@ class ManageWalletState extends State<ManageWallet>
                 ),
                 Expanded(
                     child: Container(
-                  child: ListViewTransactions(),
+                  child: ListViewTransactions(widget.changeToTab),
                   width: 400,
                   height: 580,
                   padding: EdgeInsets.all(0),
@@ -76,7 +76,9 @@ class ManageWalletState extends State<ManageWallet>
 }
 
 class ManageWallet extends StatefulWidget {
-  ManageWallet({Key key}) : super(key: key);
+  final Function changeToTab;
+
+  ManageWallet(this.changeToTab);
 
   @override
   ManageWalletState createState() => ManageWalletState();
@@ -121,7 +123,7 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                                       service.updateCurrentWallet(
                                           walletsData[index].id);
                                       Navigator.pop(context);
-                                      // Move to first tab (index tab = 0)
+                                      widget.changeToTab(0);
                                     },
                                     child: Text('Choose')),
                                 CupertinoActionSheetAction(
@@ -186,6 +188,10 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
 }
 
 class ListViewTransactions extends StatefulWidget {
+  final Function changeToTab;
+
+  ListViewTransactions(this.changeToTab);
+
   @override
   ListViewTransactionsState createState() => ListViewTransactionsState();
 }
