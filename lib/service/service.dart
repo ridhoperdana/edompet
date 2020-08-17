@@ -1,3 +1,4 @@
+import 'package:edompet/models/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:edompet/repository/db.dart';
 import 'package:edompet/models/wallet.dart';
@@ -66,6 +67,19 @@ class Service {
       }
     } catch (e) {
       print('Failed to delete wallet');
+    }
+
+    return false;
+  }
+
+  Future<bool> updateTransaction(Transaction transaction) async {
+    try {
+      var result = await dbHelper.updateTransaction(transaction);
+      if (result != null) {
+        return true;
+      }
+    } catch (e) {
+      print('Failed to update transaction');
     }
 
     return false;

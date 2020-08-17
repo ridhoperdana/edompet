@@ -11,7 +11,7 @@ class AddExpenseState extends State<AddExpense> {
 
   Operation dbHelper = Operation();
 
-  final _transaction = Transaction('expense');
+  var _transaction = Transaction('expense');
   TextEditingController dateCtl = TextEditingController();
   String dateTimeText = '';
 
@@ -20,16 +20,31 @@ class AddExpenseState extends State<AddExpense> {
   @override
   void initState() {
     super.initState();
+    if (widget.transaction != null) {
+      this._transaction = widget.transaction;
+      dateTimeText =
+          DateFormat('d MMMM y', 'id_ID').format(this._transaction.dateTime);
+      dateCtl.text = dateTimeText;
+    }
   }
 
   void saveData() async {
-    try {
-      var walletID = await service.getWalletID();
-      this._transaction.walletID = walletID;
-      await dbHelper.insertTransaction(this._transaction);
-      widget.changeTab(0);
-    } catch (e) {
-      print('Error storing data $e');
+    if (widget.transaction != null) {
+      try {
+        await dbHelper.updateTransaction(this._transaction);
+        Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+      } catch (e) {
+        print('Error updating transaction $e');
+      }
+    } else {
+      try {
+        var walletID = await service.getWalletID();
+        this._transaction.walletID = walletID;
+        await dbHelper.insertTransaction(this._transaction);
+        widget.changeTab(0);
+      } catch (e) {
+        print('Error storing transaction $e');
+      }
     }
   }
 
@@ -52,6 +67,7 @@ class AddExpenseState extends State<AddExpense> {
         },
       );
     }, currentTime: DateTime.now(), locale: LocaleType.en);
+
     setState(() {
       if (order != null) {
         dateTimeText = DateFormat('d MMMM y', 'id_ID').format(order);
@@ -63,187 +79,200 @@ class AddExpenseState extends State<AddExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-          padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
-          child: Center(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Scaffold(
+          body: SingleChildScrollView(
+        child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
             child: Center(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: Text(
-                    "Add Expense",
-                    style: TextStyle(
-                        fontSize: 28.0,
-                        color: const Color(0xFF000000),
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Roboto"),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(20.0, 0, 1.0, 39),
-                  alignment: Alignment.topLeft,
-                ),
-                Container(
-                  width: 334,
-                  height: 121,
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 27),
-                  child: Card(
-                    elevation: 5,
-                    color: Color.fromRGBO(255, 111, 111, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+              child: Center(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      "Add Expense",
+                      style: TextStyle(
+                          fontSize: 28.0,
+                          color: const Color(0xFF000000),
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Roboto"),
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(16.3, 8.5, 16.3, 8.1),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(_transaction.shortDescription,
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              )),
-                          Text(dateTimeText,
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300,
-                              )),
-                          Text(_transaction.moneySpent.toString(),
-                              style: TextStyle(
-                                fontSize: 33,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ],
+                    padding: const EdgeInsets.fromLTRB(20.0, 0, 1.0, 39),
+                    alignment: Alignment.topLeft,
+                  ),
+                  Container(
+                    width: 334,
+                    height: 121,
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 27),
+                    child: Card(
+                      elevation: 5,
+                      color: Color.fromRGBO(255, 111, 111, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 334,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    elevation: 5,
-                    color: Color.fromRGBO(248, 248, 248, 1),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(21, 0, 21, 27),
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                            keyboardType: TextInputType.number,
-                            decoration:
-                                InputDecoration(labelText: 'Money Spent'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter money spent value.';
-                              }
-                            },
-                            onChanged: (val) => setState(() {
-                              _transaction.moneySpent = int.parse(val);
-                            }),
-                          ),
-                          TextFormField(
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                            keyboardType: TextInputType.datetime,
-                            decoration: InputDecoration(labelText: 'Date'),
-                            controller: dateCtl,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter the date transaction happen';
-                              }
-                            },
-                            onTap: () {
-                              FocusScope.of(context)
-                                  .requestFocus(new FocusNode());
-                              callDatePicker();
-                            },
-                            onChanged: (val) => setState(() {
-                              _transaction.dateTime = DateTime.parse(val);
-                            }),
-                          ),
-                          TextFormField(
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                            keyboardType: TextInputType.text,
-                            decoration:
-                                InputDecoration(labelText: 'Short Description'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter short description for the transaction.';
-                              }
-                            },
-                            onChanged: (val) => setState(() {
-                              _transaction.shortDescription = val;
-                            }),
-                          ),
-                          TextFormField(
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(labelText: 'Category'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter category of the transaction.';
-                              }
-                            },
-                            onChanged: (val) => setState(() {
-                              _transaction.category = val;
-                            }),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () => saveData(),
-                        child: Container(
-                          child: Card(
-                            color: Color.fromRGBO(255, 111, 111, 1),
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.all(10),
-                              width: 90,
-                              child: Text(
-                                'Save',
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(16.3, 8.5, 16.3, 8.1),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(_transaction.shortDescription,
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ),
-                            elevation: 5,
-                          ),
+                                  fontSize: 24,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            Text(dateTimeText,
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300,
+                                )),
+                            Text(_transaction.moneySpent.toString(),
+                                style: TextStyle(
+                                  fontSize: 33,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  Container(
+                    width: 334,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 5,
+                      color: Color.fromRGBO(248, 248, 248, 1),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(21, 0, 21, 27),
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              initialValue: _transaction.moneySpent.toString(),
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                              keyboardType: TextInputType.number,
+                              decoration:
+                                  InputDecoration(labelText: 'Money Spent'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter money spent value.';
+                                }
+                              },
+                              onChanged: (val) => setState(() {
+                                _transaction.moneySpent = int.parse(val);
+                              }),
+                            ),
+                            TextFormField(
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                              keyboardType: TextInputType.datetime,
+                              decoration: InputDecoration(labelText: 'Date'),
+                              controller: dateCtl,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter the date transaction happen';
+                                }
+                              },
+                              onTap: () {
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
+                                callDatePicker();
+                              },
+                              onChanged: (val) => setState(() {
+                                _transaction.dateTime = DateTime.parse(val);
+                              }),
+                            ),
+                            TextFormField(
+                              initialValue: _transaction.shortDescription,
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                  labelText: 'Short Description'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter short description for the transaction.';
+                                }
+                              },
+                              onChanged: (val) => setState(() {
+                                _transaction.shortDescription = val;
+                              }),
+                            ),
+                            TextFormField(
+                              initialValue: _transaction.category,
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                              keyboardType: TextInputType.text,
+                              decoration:
+                                  InputDecoration(labelText: 'Category'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter category of the transaction.';
+                                }
+                              },
+                              onChanged: (val) => setState(() {
+                                _transaction.category = val;
+                              }),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 20, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () => saveData(),
+                          child: Container(
+                            child: Card(
+                              color: Color.fromRGBO(255, 111, 111, 1),
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(10),
+                                width: 90,
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                              elevation: 5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
             )),
-          )),
+      )),
     );
   }
 }
 
 class AddExpense extends StatefulWidget {
   final Function changeTab;
+  final Transaction transaction;
 
-  AddExpense(this.changeTab);
+  AddExpense(this.changeTab, {this.transaction});
+
+  AddExpense.edit(this.transaction, {this.changeTab});
 
   @override
   AddExpenseState createState() => AddExpenseState();

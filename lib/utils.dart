@@ -1,4 +1,10 @@
+import 'package:edompet/models/transaction.dart';
 import 'package:flutter/material.dart';
+
+class EditTransactionArgument {
+  final Transaction transaction;
+  EditTransactionArgument(this.transaction);
+}
 
 class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {

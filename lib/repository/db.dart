@@ -81,16 +81,21 @@ class Operation {
     return result;
   }
 
-  // Future<int> updateTransaction(trans.Transaction transaction) async {
-  //   Database db = await dbHelper.initDb();
-  //   final sql = '''UPDATE ${Operation.transactionTable}
-  //   SET ${CRUD.name} = ?, ${CRUD.phone}
-  //   WHERE ${CRUD.id} = ?
-  //   ''';
-  //   List<dynamic> params = [todo.name, todo.phone, todo.id];
-  //   final result = await db.rawUpdate(sql, params);
-  //   return result;
-  // }
+  Future<int> updateTransaction(trans.Transaction transaction) async {
+    Database db = await dbHelper.initDb();
+    final sql = '''UPDATE transactions
+    SET short_description = ?, category = ?, spent_value = ?
+    WHERE id = ?
+    ''';
+    List<dynamic> params = [
+      transaction.shortDescription,
+      transaction.category,
+      transaction.moneySpent,
+      transaction.id
+    ];
+    final result = await db.rawUpdate(sql, params);
+    return result;
+  }
 
   Future<int> deleteTransaction(int id) async {
     Database db = await dbHelper.initDb();

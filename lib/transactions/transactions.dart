@@ -1,4 +1,5 @@
 import 'package:edompet/service/service.dart';
+import 'package:edompet/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:edompet/models/transaction.dart';
 import 'package:edompet/repository/db.dart';
@@ -190,6 +191,10 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                       caption: 'Edit',
                       color: Colors.black45,
                       icon: Icons.edit,
+                      onTap: () {
+                        Navigator.pushNamed(context, "/edit-expense",
+                            arguments: transactionsData[index]);
+                      },
                     ),
                     IconSlideAction(
                       caption: 'Delete',
