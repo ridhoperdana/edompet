@@ -1,5 +1,6 @@
 import 'package:edompet/service/service.dart';
 import 'package:edompet/utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:edompet/models/transaction.dart';
 import 'package:edompet/repository/db.dart';
@@ -200,28 +201,32 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                       caption: 'Delete',
                       color: Colors.red,
                       icon: Icons.delete,
-                      onTap: () => showDialog(
+                      onTap: () => showPlatformDialog(
                           context: context,
-                          child: PlatformAlertDialog(
-                            title: Text("Delete Confirmation"),
-                            content: Text("Are you sure want to delete?"),
-                            actions: [
-                              FlatButton(
-                                child: Text("No"),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              FlatButton(
-                                child: Text("Yes"),
-                                onPressed: () {
-                                  delete(int.parse(transactionsData[index].id));
-                                  Navigator.pushNamedAndRemoveUntil(
-                                      context, "/", (route) => false);
-                                },
-                              ),
-                            ],
-                          )),
+                          builder: (context) {
+                            return PlatformAlertDialog(
+                              cupertino: (context, platform) {
+                                return CupertinoAlertDialogData(actions: [
+                                  CupertinoDialogAction(
+                                    child: Text("No"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  CupertinoDialogAction(
+                                    child: Text("Yes"),
+                                    onPressed: () {
+                                      delete(int.parse(
+                                          transactionsData[index].id));
+                                      Navigator.pushNamedAndRemoveUntil(
+                                          context, "/", (route) => false);
+                                    },
+                                  ),
+                                ]);
+                              },
+                              content: Text("Are you sure want to delete?"),
+                            );
+                          }),
                     ),
                   ],
                 );

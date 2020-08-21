@@ -1,10 +1,10 @@
 import 'package:edompet/models/transaction.dart';
 import 'package:edompet/service/service.dart';
-import 'package:edompet/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:edompet/models/wallet.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:edompet/repository/db.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 
 class AddWalletState extends State<AddWallet> {
   int id = 2;
@@ -16,6 +16,8 @@ class AddWalletState extends State<AddWallet> {
   Service service = Service();
 
   void changeColor(Color color) => setState(() => currentColor = color);
+
+  String headerTitle = 'Add Wallet';
 
   void saveData() async {
     try {
@@ -38,6 +40,10 @@ class AddWalletState extends State<AddWallet> {
   @override
   void initState() {
     super.initState();
+    if (widget.wallet != null) {
+      this.wallet = widget.wallet;
+      this.headerTitle = 'Edit Wallet ${this.wallet.name}';
+    }
   }
 
   @override
@@ -57,7 +63,7 @@ class AddWalletState extends State<AddWallet> {
                 children: <Widget>[
                   Container(
                     child: Text(
-                      "Add Wallet",
+                      headerTitle,
                       style: TextStyle(
                           fontSize: 28.0,
                           color: const Color(0xFF000000),
@@ -69,8 +75,7 @@ class AddWalletState extends State<AddWallet> {
                   ),
                   Container(
                     width: 334,
-                    height: 121,
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 27),
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Card(
                       elevation: 5,
                       color: this.currentColor,
@@ -89,7 +94,20 @@ class AddWalletState extends State<AddWallet> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 )),
-                            Text(wallet.initialMoney.toString(),
+                            Text(
+                                FlutterMoneyFormatter(
+                                        amount: wallet.initialMoney.toDouble(),
+                                        settings: MoneyFormatterSettings(
+                                            symbol: 'IDR',
+                                            thousandSeparator: '.',
+                                            decimalSeparator: ',',
+                                            symbolAndNumberSeparator: ' ',
+                                            fractionDigits: 2,
+                                            compactFormatType:
+                                                CompactFormatType.short))
+                                    .output
+                                    .withoutFractionDigits
+                                    .toString(),
                                 style: TextStyle(
                                   fontSize: 33,
                                   color: Colors.white,
@@ -274,6 +292,12 @@ class AddWalletState extends State<AddWallet> {
 }
 
 class AddWallet extends StatefulWidget {
+  final Wallet wallet;
+
+  AddWallet({this.wallet});
+
+  AddWallet.edit(this.wallet);
+
   @override
   AddWalletState createState() => AddWalletState();
 }

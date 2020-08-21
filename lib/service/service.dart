@@ -2,6 +2,7 @@ import 'package:edompet/models/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:edompet/repository/db.dart';
 import 'package:edompet/models/wallet.dart';
+import 'package:csv/csv.dart';
 
 class Service {
   Operation dbHelper = Operation();
@@ -83,5 +84,70 @@ class Service {
     }
 
     return false;
+  }
+
+  Future<String> generateCSV() async {
+    var wallets = await dbHelper.fetchWalletWithTransactions();
+    var converter = const ListToCsvConverter();
+    var data = <List>[];
+    var keys = <String>[];
+    var keyIndexMap = <String, int>{};
+
+    // Add the key and fix previous records
+    int _addKey(String key) {
+      var index = keys.length;
+      keyIndexMap[key] = index;
+      keys.add(key);
+      for (var dataRow in data) {
+        dataRow.add(null);
+      }
+      return index;
+    }
+
+    for (var wallet in wallets) {
+      // This list might grow if a new key is found
+      var dataRow = List(keyIndexMap.length);
+      // Fix missing key
+      var keyIndex = keyIndexMap['id'];
+      if (keyIndex == null) {
+        // New key is found
+        // Add it and fix previous data
+        keyIndex = _addKey('id');
+        // grow our list
+        dataRow = List.from(dataRow, growable: true)..add(wallet.id);
+      } else {
+        dataRow[keyIndex] = wallet.id;
+      }
+
+      keyIndex = keyIndexMap['name'];
+      if (keyIndex == null) {
+        keyIndex = _addKey('name');
+        dataRow = List.from(dataRow, growable: true)..add(wallet.name);
+      } else {
+        dataRow[keyIndex] = wallet.name;
+      }
+
+      keyIndex = keyIndexMap['color'];
+      if (keyIndex == null) {
+        keyIndex = _addKey('color');
+        dataRow = List.from(dataRow, growable: true)..add(wallet.color);
+      } else {
+        dataRow[keyIndex] = wallet.color;
+      }
+
+      keyIndex = keyIndexMap['transactions'];
+      if (keyIndex == null) {
+        keyIndex = _addKey('transactions');
+        dataRow = List.from(dataRow, growable: true)..add(wallet.transactions);
+      } else {
+        dataRow[keyIndex] = wallet.transactions;
+      }
+
+      data.add(dataRow);
+    }
+
+    return converter.convert(<List>[]
+      ..add(keys)
+      ..addAll(data));
   }
 }

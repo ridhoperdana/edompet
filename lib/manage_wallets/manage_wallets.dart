@@ -116,7 +116,9 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                                         child: Text('Choose')),
                                     CupertinoActionSheetAction(
                                         onPressed: () {
-                                          Navigator.pop(context);
+                                          Navigator.pushNamed(
+                                              context, "/edit-wallet",
+                                              arguments: walletsData[index]);
                                         },
                                         child: Text('Edit')),
                                     CupertinoActionSheetAction(
@@ -148,7 +150,7 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
                                           }),
                                       ListTile(
                                         title: Text('Edit'),
-                                        onTap: () => {},
+                                        onTap: () {},
                                       ),
                                       ListTile(
                                         title: Text(

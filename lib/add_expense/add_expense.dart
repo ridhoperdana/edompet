@@ -5,6 +5,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:edompet/repository/db.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 
 class AddExpenseState extends State<AddExpense> {
   int id = 1;
@@ -90,6 +91,13 @@ class AddExpenseState extends State<AddExpense> {
     });
   }
 
+  bool isEdit() {
+    if (widget.transaction != null) {
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -144,7 +152,21 @@ class AddExpenseState extends State<AddExpense> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.w300,
                                 )),
-                            Text(_transaction.moneySpent.toString(),
+                            Text(
+                                FlutterMoneyFormatter(
+                                        amount:
+                                            _transaction.moneySpent.toDouble(),
+                                        settings: MoneyFormatterSettings(
+                                            symbol: 'IDR',
+                                            thousandSeparator: '.',
+                                            decimalSeparator: ',',
+                                            symbolAndNumberSeparator: ' ',
+                                            fractionDigits: 2,
+                                            compactFormatType:
+                                                CompactFormatType.short))
+                                    .output
+                                    .withoutFractionDigits
+                                    .toString(),
                                 style: TextStyle(
                                   fontSize: 33,
                                   color: Colors.white,
@@ -252,6 +274,28 @@ class AddExpenseState extends State<AddExpense> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
+                        if (isEdit())
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              child: Card(
+                                color: Colors.grey,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.all(10),
+                                  width: 90,
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                ),
+                                elevation: 5,
+                              ),
+                            ),
+                          ),
                         InkWell(
                           onTap: () => saveData(),
                           child: Container(

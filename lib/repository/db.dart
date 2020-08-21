@@ -238,4 +238,29 @@ class Operation {
 
     return wallets;
   }
+
+  Future<List<Wallet>> fetchWalletWithTransactions() async {
+    Database db = await dbHelper.initDb();
+    var sql = '''SELECT id, name, color FROM wallet''';
+    List<Wallet> wallets = List();
+    try {
+      final data = await db.rawQuery(sql);
+      for (final node in data) {
+        final Wallet wallet = Wallet.fromMap(node);
+        var walletID = int.parse(wallet.id);
+        var income = await countTotalIncome(walletID);
+        var expense = await countTotalExpense(walletID);
+        wallet.initialMoney = income - expense;
+
+        var transactions = await fetchTransactions("all", walletID);
+
+        wallet.transactions = transactions;
+        wallets.add(wallet);
+      }
+    } catch (e) {
+      print('error fetch wallet: $e');
+    }
+
+    return wallets;
+  }
 }

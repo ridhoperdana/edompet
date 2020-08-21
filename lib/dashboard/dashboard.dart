@@ -8,6 +8,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:edompet/service/service.dart';
 import 'package:edompet/models/wallet.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -29,12 +32,34 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  void downloadCSV(ProgressDialog pr) async {
+    await pr.show();
+    var data = await service.generateCSV();
+    await pr.hide();
+
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/' + 'data.csv');
+    await file.writeAsString(data);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ProgressDialog pr = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: true,
+    );
+
+    pr.style(message: 'Converting data to CSV');
     return FutureBuilder<DataDashboard>(
         future: data,
         builder: (context, snap) {
           if (snap.hasData) {
+            var currentWallet = Wallet('', 0, '#FFFFFF');
+            if (snap.data.getWallet != null) {
+              currentWallet = snap.data.getWallet;
+            }
+
             return SingleChildScrollView(
                 child: Container(
               color: Colors.white,
@@ -54,15 +79,21 @@ class _DashboardState extends State<Dashboard> {
                       alignment: Alignment.topLeft,
                     ),
                     Spacer(),
-                    Container(
-                      child: SvgPicture.asset(
-                        'asset/images/export.svg',
-                        color: Colors.blue,
-                        height: 24,
+                    InkWell(
+                      child: Container(
+                        child: SvgPicture.asset(
+                          'asset/images/export.svg',
+                          color: Colors.blue,
+                          height: 24,
+                        ),
+                        alignment: Alignment.topRight,
+                        padding:
+                            const EdgeInsets.fromLTRB(1.0, 50.0, 20.0, 1.0),
                       ),
-                      alignment: Alignment.topRight,
-                      padding: const EdgeInsets.fromLTRB(1.0, 50.0, 20.0, 1.0),
-                    )
+                      onTap: () {
+                        downloadCSV(pr);
+                      },
+                    ),
                   ]),
                   Container(
                     alignment: Alignment(-1, -1),
@@ -72,7 +103,7 @@ class _DashboardState extends State<Dashboard> {
                       children: <Widget>[
                         Container(
                           child: Text(
-                            snap.data.getWallet.name,
+                            currentWallet.name,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
@@ -94,7 +125,7 @@ class _DashboardState extends State<Dashboard> {
                           width: 63,
                           decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
-                            color: HexColor(snap.data.getWallet.color),
+                            color: HexColor(currentWallet.color),
                           ),
                         ),
                         Row(
@@ -114,8 +145,7 @@ class _DashboardState extends State<Dashboard> {
                               child: FittedBox(
                                 child: Text(
                                   FlutterMoneyFormatter(
-                                          amount: snap
-                                              .data.getWallet.initialMoney
+                                          amount: currentWallet.initialMoney
                                               .toDouble(),
                                           settings: MoneyFormatterSettings(
                                               symbol: 'IDR',
@@ -142,7 +172,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   Container(
                     height: 500,
-                    child: ListViewHome(int.parse(snap.data.getWallet.id)),
+                    child: ListViewHome(int.parse(currentWallet.id)),
                     width: 1000,
                   ),
                 ],
