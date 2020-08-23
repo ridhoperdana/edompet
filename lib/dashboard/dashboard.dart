@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/rendering.dart';
 import 'package:edompet/models/transaction.dart';
-import 'package:edompet/repository/db.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:edompet/service/service.dart';
@@ -186,8 +185,8 @@ class _DashboardState extends State<Dashboard> {
 }
 
 class ListViewTransactionsState extends State<ListViewTransactions> {
-  Operation dbHelper = Operation();
   Future<List<Transaction>> futureTranscation;
+  Service service = Service();
 
   String transactionType;
   int walletID;
@@ -201,7 +200,7 @@ class ListViewTransactionsState extends State<ListViewTransactions> {
     setState(() {
       try {
         futureTranscation =
-            dbHelper.fetchTransactions(this.transactionType, this.walletID);
+            service.fetchTransactions(this.transactionType, this.walletID);
       } catch (e) {
         print('error getting database: $e');
       }

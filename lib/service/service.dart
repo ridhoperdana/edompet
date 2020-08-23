@@ -60,6 +60,20 @@ class Service {
     return false;
   }
 
+  Future<List<Transaction>> fetchTransactions(
+      String transactionType, int walletID) async {
+    List<Transaction> emptyTransactions;
+    try {
+      var result = await dbHelper.fetchTransactions(transactionType, walletID);
+      if (result != null) {
+        return result;
+      }
+    } catch (e) {
+      print('Failed to fetch transactions $e');
+    }
+    return emptyTransactions;
+  }
+
   Future<Wallet> insertWallet(Wallet wallet) async {
     Wallet emptyWallet;
     try {
