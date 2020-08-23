@@ -47,6 +47,19 @@ class Service {
     return walletID;
   }
 
+  Future<List<Wallet>> fetchWallet() async {
+    List<Wallet> emptyWallet;
+    try {
+      var result = await dbHelper.fetchWallet();
+      if (result != null) {
+        return result;
+      }
+    } catch (e) {
+      print('Failed to fetch wallets $e');
+    }
+    return emptyWallet;
+  }
+
   Future<bool> deleteTransaction(int id) async {
     try {
       var deletedID = await dbHelper.deleteTransaction(id);

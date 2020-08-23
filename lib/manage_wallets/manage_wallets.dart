@@ -3,7 +3,6 @@ import 'package:edompet/service/service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:edompet/utils.dart';
-import 'package:edompet/repository/db.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -67,14 +66,13 @@ class ManageWallet extends StatefulWidget {
 }
 
 class ListViewTransactionsState extends State<ListViewTransactions> {
-  Operation dbHelper = Operation();
   Future<List<Wallet>> futureWallet;
   Service service = Service();
 
   void initState() {
     super.initState();
     try {
-      futureWallet = dbHelper.fetchWallet();
+      futureWallet = service.fetchWallet();
     } catch (e) {
       print('Fetch wallet error: $e');
     }
