@@ -37,22 +37,7 @@ class Wallet {
 
 class DataDashboard {
   Wallet _wallet;
-  // int _walletID;
-  // int _money;
-  // String _color;
   DataDashboard(this._wallet);
-
-  // int get getMoney {
-  //   return this._money;
-  // }
-
-  // int get getWalletID {
-  //   return this._walletID;
-  // }
-
-  // String get getColor {
-  //   return this._color;
-  // }
 
   Wallet get getWallet {
     return this._wallet;
