@@ -60,6 +60,20 @@ class Service {
     return false;
   }
 
+  Future<Wallet> insertWallet(Wallet wallet) async {
+    Wallet emptyWallet;
+    try {
+      var result = await dbHelper.insertWallet(wallet);
+      if (result != null) {
+        wallet.id = result.toString();
+        return wallet;
+      }
+    } catch (e) {
+      print('Failed to insert wallet $e');
+    }
+    return emptyWallet;
+  }
+
   Future<bool> deleteWallet(int id) async {
     try {
       var deletedID = await dbHelper.deleteWallet(id);

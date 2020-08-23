@@ -3,7 +3,6 @@ import 'package:edompet/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:edompet/models/wallet.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:edompet/repository/db.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 
 class AddWalletState extends State<AddWallet> {
@@ -12,7 +11,6 @@ class AddWalletState extends State<AddWallet> {
   Wallet wallet = Wallet('', 0, '');
   Color currentColor = Color.fromRGBO(64, 152, 100, 1);
 
-  Operation dbHelper = Operation();
   Service service = Service();
 
   void changeColor(Color color) => setState(() => currentColor = color);
@@ -23,14 +21,14 @@ class AddWalletState extends State<AddWallet> {
     try {
       this.wallet.color =
           '#${this.currentColor.value.toRadixString(16).substring(2, 8)}';
-      var walletID = await dbHelper.insertWallet(this.wallet);
+      var wallet = await service.insertWallet(this.wallet);
       var transaction = Transaction('income');
       transaction.category = 'income';
       transaction.shortDescription = 'Initial Money';
       transaction.moneySpent = this.wallet.initialMoney;
       transaction.dateTime = DateTime.now();
-      transaction.walletID = walletID;
-      await dbHelper.insertTransaction(transaction);
+      transaction.walletID = int.parse(wallet.id);
+      await service.insertTransaction(transaction);
       Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
     } catch (e) {
       print('Error storing wallet $e');
