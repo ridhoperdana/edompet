@@ -1,5 +1,4 @@
 import 'package:edompet/service/service.dart';
-import 'package:edompet/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:edompet/models/transaction.dart';

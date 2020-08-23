@@ -86,6 +86,21 @@ class Service {
     return false;
   }
 
+  Future<Transaction> insertTransaction(Transaction transaction) async {
+    Transaction emptyTransaction;
+    try {
+      var result = await dbHelper.insertTransaction(transaction);
+      if (result != null) {
+        transaction.id = result.toString();
+        return transaction;
+      }
+    } catch (e) {
+      print('Failed to insert transaction');
+    }
+
+    return emptyTransaction;
+  }
+
   Future<String> generateCSV() async {
     var wallets = await dbHelper.fetchWalletWithTransactions();
     var converter = const ListToCsvConverter();

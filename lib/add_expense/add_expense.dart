@@ -4,13 +4,10 @@ import 'package:edompet/models/transaction.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:edompet/repository/db.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 
 class AddExpenseState extends State<AddExpense> {
   int id = 1;
-
-  Operation dbHelper = Operation();
 
   var _transaction = Transaction('expense');
   TextEditingController dateCtl = TextEditingController();
@@ -45,7 +42,7 @@ class AddExpenseState extends State<AddExpense> {
   void saveData() async {
     if (widget.transaction != null) {
       try {
-        await dbHelper.updateTransaction(this._transaction);
+        await service.updateTransaction(this._transaction);
         Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
       } catch (e) {
         print('Error updating transaction $e');
@@ -54,7 +51,7 @@ class AddExpenseState extends State<AddExpense> {
       try {
         var walletID = await service.getWalletID();
         this._transaction.walletID = walletID;
-        await dbHelper.insertTransaction(this._transaction);
+        await service.insertTransaction(this._transaction);
         widget.changeTab(0);
       } catch (e) {
         print('Error storing transaction $e');
